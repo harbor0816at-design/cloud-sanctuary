@@ -123,6 +123,30 @@ ul.q{padding-left:20px;color:var(--ink);line-height:2;font-size:15px}
 .btn:disabled{opacity:.45}
 #acctbtn.in{background:linear-gradient(180deg,#5a3d1d,#2e1f10);color:var(--gold2);font-weight:600}
 #langbtn{font-size:13px}
+
+#dock{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:none;gap:4px;padding:6px;border-radius:20px;background:rgba(15,10,7,.72);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+body.in #dock{display:flex}
+body.sheet #dock{display:none}
+#dock button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:58px;padding:6px 6px;border-radius:14px;color:var(--ink)}
+#dock button:active{background:rgba(217,178,106,.18)}
+#dock b{font-size:20px;line-height:1;font-weight:400}
+#dock span{font-size:12px;color:var(--dim);letter-spacing:.04em}
+body.in #actions{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
+body.in #hint{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
+body.touch #joy{bottom:calc(env(safe-area-inset-bottom,0px) + 92px);width:104px;height:104px}
+body.touch #knob{left:32px;top:32px}
+body.touch.in #actions{left:130px}
+#intro .in{max-width:520px}
+#intro .lead{margin-bottom:16px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 14px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:16px;border:1px solid var(--line);background:rgba(30,21,13,.7);text-align:center}
+.tile:active{transform:scale(.97)}
+.tile:hover{border-color:rgba(240,212,154,.6)}
+.tile b{font-size:26px;font-weight:400;line-height:1.1}
+.tile strong{font-size:15px;color:var(--gold2);font-weight:600;letter-spacing:.04em}
+.tile small{font-size:11px;color:#a8977c;line-height:1.4}
+.tile em{font-style:normal;color:var(--gold)}
+@media (max-width:480px){.tiles{grid-template-columns:repeat(2,1fr)}#intro h1{font-size:28px}#intro .en{margin-bottom:12px}#intro .cross{margin-bottom:10px}}
 </style>
 </head>
 <body>
@@ -131,15 +155,20 @@ ul.q{padding-left:20px;color:var(--ink);line-height:2;font-size:15px}
 <div class="hud" id="topbar">
   <div id="tl"><div id="zone"></div><div class="pill" id="online"><i></i><span></span></div><div class="pill" id="group"></div></div>
   <div id="tr">
-    <button class="icon" id="langbtn" title="Language">EN</button>
     <button class="icon" id="acctbtn" title="Account">👤</button>
-    <button class="icon" id="audiobtn" title="Music">♪</button>
-    <button class="icon" id="mapbtn" title="Map"><canvas id="minimap" width="144" height="208"></canvas></button>
+    <button class="icon" id="menubtn" title="Menu">☰</button>
   </div>
 </div>
 <div class="hud" id="actions"></div>
 <div class="hud" id="hint"></div>
 <div class="hud" id="joy"><div id="knob"></div></div>
+<nav class="hud" id="dock">
+  <button data-go="pray"><b>🙏</b><span data-i18n="dPray">祷告</span></button>
+  <button data-go="candle"><b>🕯</b><span data-i18n="dCandle">点蜡烛</span></button>
+  <button data-go="confess"><b>✝</b><span data-i18n="dConfess">忏悔</span></button>
+  <button data-go="group"><b>👥</b><span data-i18n="dGroup">祷告会</span></button>
+  <button data-go="wall"><b>📜</b><span data-i18n="dWall">代祷墙</span></button>
+</nav>
 <div id="toast"></div>
 
 <div id="sheet"><div class="grab"></div><div class="head"><h2 id="sheetTitle"></h2><button class="x" id="sheetX">✕</button></div><div class="body" id="sheetBody"></div></div>
@@ -149,20 +178,23 @@ ul.q{padding-left:20px;color:var(--ink);line-height:2;font-size:15px}
     <div class="cross"></div>
     <h1 data-i18n="title">云上圣所</h1>
     <div class="en" data-i18n="sub">SANCTUARY</div>
-    <div class="p" data-i18n="intro"></div>
-    <div class="row">
-      <button class="btn pri" id="enterBtn" data-i18n="enter">进入圣所</button>
-      <button class="btn" id="quickBtn" data-i18n="quick">立即祷告</button>
+    <div class="p lead" data-i18n="introShort"></div>
+    <div class="tiles">
+      <button class="tile" data-go="pray"><b>🙏</b><strong data-i18n="tlPray"></strong><small data-i18n="tlPrayS"></small></button>
+      <button class="tile" data-go="candle"><b>🕯</b><strong data-i18n="tlCandle"></strong><small><em id="tCandleP"></em> · <span data-i18n="tlCandleS"></span></small></button>
+      <button class="tile" data-go="confess"><b>✝</b><strong data-i18n="tlConfess"></strong><small><em id="tConfessP"></em> · <span data-i18n="tlConfessS"></span></small></button>
+      <button class="tile" data-go="group"><b>👥</b><strong data-i18n="tlGroup"></strong><small data-i18n="tlGroupS"></small></button>
+      <button class="tile" data-go="wall"><b>📜</b><strong data-i18n="tlWall"></strong><small data-i18n="tlWallS"></small></button>
+      <button class="tile" data-go="explore"><b>⛪</b><strong data-i18n="tlExplore"></strong><small data-i18n="tlExploreS"></small></button>
     </div>
     <div id="loading" data-i18n="preparing">正在准备圣所…</div>
-    <div class="ctl" id="ctlHint"></div>
     <div class="links"><a href="/privacy.html" data-i18n="privacy">隐私与使用说明</a><a href="#" id="installLink" style="display:none" data-i18n="install">添加到主屏幕</a></div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="/i18n.js?v=2"></script>
-<script src="/app.js?v=2"></script>
+<script src="/i18n.js?v=3"></script>
+<script src="/app.js?v=3"></script>
 </body>
 </html>
