@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>代祷审核 · 云上圣所</title>
+<style>
+body{margin:0;background:#0c0907;color:#efe4d0;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:20px;color:#f0d49a;margin:0 0 14px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+input{flex:1;min-width:180px;background:#1b140e;border:1px solid #4a3a28;color:#efe4d0;border-radius:10px;padding:10px;font-size:15px}
+button{background:#2a1f15;border:1px solid #5a4630;color:#efe4d0;border-radius:10px;padding:9px 14px;font-size:14px;cursor:pointer}
+button.on{background:#d9b26a;color:#1b120a;border-color:#d9b26a}
+.ok{background:#2e4a2a;border-color:#4f7a48}.no{background:#4a2a2a;border-color:#7a4848}
+.card{border:1px solid #3a2e22;border-radius:12px;padding:12px 14px;margin:10px 0;background:#15100b}
+.t{font-size:16px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.m{color:#9c8b72;font-size:12px;margin:8px 0}
+.a{display:flex;gap:8px;flex-wrap:wrap}
+#msg{color:#d9b26a;font-size:13px;min-height:18px}
+</style>
+</head>
+<body>
+<main>
+<h1>代祷墙审核</h1>
+<div class="bar"><input id="key" type="password" placeholder="管理密钥"><button id="save">保存并载入</button></div>
+<div class="bar" id="tabs"><button data-s="pending" class="on">待审核</button><button data-s="approved">已公开</button><button data-s="hidden">已隐藏</button><button id="refresh">刷新</button></div>
+<div id="msg"></div>
+<div id="list"></div>
+</main>
+<script>
+const SB_URL='https://smwqqiebkdaheikihbrg.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtd3FxaWVia2RhaGVpa2loYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NzU2NzksImV4cCI6MjEwNzU1MTY3OX0.ouoYJ_OTLp4aazXn7H9xcwGJQOQ-pF1fttwR7U5WaG4';
+const $=s=>document.querySelector(s);let status='pending';
+let key='';try{key=localStorage.getItem('sanct_admin')||'';}catch(e){}
+$('#key').value=key;
+async function rpc(fn,body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>null);if(!r.ok)throw new Error((j&&j.message)||r.status);return j;}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function load(){if(!key){$('#msg').textContent='请输入管理密钥';return;}$('#msg').textContent='载入中…';
+ try{const rows=await rpc('sanct_admin_list',{p_key:key,p_status:status});$('#msg').textContent=`共 ${rows.length} 条`;
+  $('#list').innerHTML=rows.map(r=>`<div class="card"><div class="t">${esc(r.body)}</div><div class="m">${new Date(r.created_at).toLocaleString()} · 代祷 ${r.pray_count} · 举报 ${r.report_count}</div><div class="a">
+   ${status!=='approved'?`<button class="ok" data-a="approved" data-id="${r.id}">公开</button>`:''}${status!=='hidden'?`<button data-a="hidden" data-id="${r.id}">隐藏</button>`:''}<button class="no" data-a="delete" data-id="${r.id}">删除</button></div></div>`).join('')||'<p style="color:#8f7f68">没有内容</p>';
+  document.querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{if(b.dataset.a==='delete'&&!window.confirm('确定永久删除？'))return;b.disabled=true;try{await rpc('sanct_admin_set',{p_key:key,p_id:b.dataset.id,p_status:b.dataset.a});b.closest('.card').remove();}catch(e){$('#msg').textContent='操作失败：'+e.message;b.disabled=false;}});
+ }catch(e){$('#msg').textContent=e.message==='forbidden'?'密钥不正确':'载入失败：'+e.message;$('#list').innerHTML='';}}
+$('#save').onclick=()=>{key=$('#key').value.trim();try{localStorage.setItem('sanct_admin',key);}catch(e){}load();};
+$('#refresh').onclick=load;
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{status=b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('on',x===b));load();});
+load();
+</script>
+</body>
+</html>
