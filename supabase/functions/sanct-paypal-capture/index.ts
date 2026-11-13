@@ -26,11 +26,14 @@ Deno.serve(async (req) => {
     if (o.status === "paid" || o.status === "used") return json({ status: o.status });
     if (o.status !== "pending" || !o.provider_ref) return json({ error: "bad_status", status: o.status }, 409);
     const at = await ppToken();
-    let r = await fetch(`${BASE}/v2/checkout/orders/${o.provider_ref}/capture`, { method: "POST", headers: { Authorization: `Bearer ${at}`, "Content-Type": "application/json", "PayPal-Request-Id": `capture-${o.id}` } });
+    // Look at the order first: only an APPROVED order can be captured; a COMPLETED one was captured already.
+    let r = await fetch(`${BASE}/v2/checkout/orders/${o.provider_ref}`, { headers: { Authorization: `Bearer ${at}` } });
     let j = await r.json();
-    if (!r.ok && j?.details?.[0]?.issue === "ORDER_ALREADY_CAPTURED") {
-      r = await fetch(`${BASE}/v2/checkout/orders/${o.provider_ref}`, { headers: { Authorization: `Bearer ${at}` } });
+    if (!r.ok) return json({ error: "paypal_get", name: j?.name ?? null }, 502);
+    if (j.status === "APPROVED") {
+      r = await fetch(`${BASE}/v2/checkout/orders/${o.provider_ref}/capture`, { method: "POST", headers: { Authorization: `Bearer ${at}`, "Content-Type": "application/json", "PayPal-Request-Id": `capture-${o.id}-${Date.now()}` } });
       j = await r.json();
+      if (!r.ok) return json({ error: "paypal_capture", name: j?.name ?? null, issue: j?.details?.[0]?.issue ?? null }, 402);
     }
     if (j?.status !== "COMPLETED") return json({ error: "not_completed", status: j?.status ?? null }, 402);
     const pu = j.purchase_units?.[0];
