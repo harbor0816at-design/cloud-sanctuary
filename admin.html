@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>代祷审核 · 云上圣所</title>
+<title>后台审核 · 云上圣所</title>
 <style>
 body{margin:0;background:#0c0907;color:#efe4d0;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
 main{max-width:720px;margin:0 auto;padding:24px 16px 60px}
@@ -23,9 +23,9 @@ button.on{background:#d9b26a;color:#1b120a;border-color:#d9b26a}
 </head>
 <body>
 <main>
-<h1>代祷墙审核</h1>
+<h1>后台审核</h1>
 <div class="bar"><input id="key" type="password" placeholder="管理密钥"><button id="save">保存并载入</button></div>
-<div class="bar" id="tabs"><button data-s="pending" class="on">待审核</button><button data-s="approved">已公开</button><button data-s="hidden">已隐藏</button><button id="refresh">刷新</button></div>
+<div class="bar" id="tabs"><button data-s="pending" class="on">代祷待审核</button><button data-s="approved">代祷已公开</button><button data-s="hidden">代祷已隐藏</button><button data-s="r:open">⚑ 待处理投诉</button><button data-s="r:all">全部投诉</button><button id="refresh">刷新</button></div>
 <div id="msg"></div>
 <div id="list"></div>
 </main>
@@ -37,7 +37,14 @@ let key='';try{key=localStorage.getItem('sanct_admin')||'';}catch(e){}
 $('#key').value=key;
 async function rpc(fn,body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>null);if(!r.ok)throw new Error((j&&j.message)||r.status);return j;}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TT={prayer:'代祷',room:'祷告会',user:'用户名',other:'通用投诉'},RS={spam:'垃圾/广告',abuse:'骚扰',hate:'仇恨',sexual:'色情',violence:'暴力/威胁',scam:'诈骗',illegal:'违法',copyright:'版权',privacy:'隐私',other:'其他'},ST={approved:'已公开',pending:'待审核',hidden:'已隐藏',active:'正常',banned:'已封号',name_hidden:'名字已隐藏'},AC={takedown:'已下架',restore:'已恢复',ban:'已封号',dismiss:'已驳回'};
+async function loadReports(st){const rows=await rpc('sanct_admin_reports',{p_key:key,p_status:st});$('#msg').textContent=`共 ${rows.length} 条投诉`;
+ $('#list').innerHTML=rows.map(r=>`<div class="card"><div class="m">${TT[r.target_type]||r.target_type} · 原因：<b>${RS[r.reason]||r.reason}</b> · ${new Date(r.created_at).toLocaleString()} · 同一对象被举报 ${r.same_target} 次${r.target_state?` · 当前状态：${ST[r.target_state]||r.target_state}`:''}${r.status!=='open'?` · 处理结果：${AC[r.action]||r.status}`:''}</div>
+  ${r.target_label?`<div class="t">${esc(r.target_label)}</div>`:''}${r.details?`<div class="t" style="color:#cbbb9f;font-size:14px;margin-top:6px">说明：${esc(r.details)}</div>`:''}${r.contact?`<div class="m">联系人：${esc(r.contact)}</div>`:''}
+  ${r.status==='open'?`<div class="a">${r.target_id?`<button class="no" data-ra="takedown" data-id="${r.id}">下架/隐藏</button><button class="ok" data-ra="restore" data-id="${r.id}">恢复并公开</button>${r.target_type!=='prayer'?`<button class="no" data-ra="ban" data-id="${r.id}">封号</button>`:''}`:''}<button data-ra="dismiss" data-id="${r.id}">${r.target_id?'驳回':'标记已处理'}</button></div>`:''}</div>`).join('')||'<p style="color:#8f7f68">没有投诉</p>';
+ document.querySelectorAll('[data-ra]').forEach(b=>b.onclick=async()=>{if(b.dataset.ra==='ban'&&!window.confirm('确定封号？该用户将无法登录，其祷告会会被隐藏。'))return;b.disabled=true;try{await rpc('sanct_admin_resolve',{p_key:key,p_id:b.dataset.id,p_action:b.dataset.ra});load();}catch(e){$('#msg').textContent='操作失败：'+e.message;b.disabled=false;}});}
 async function load(){if(!key){$('#msg').textContent='请输入管理密钥';return;}$('#msg').textContent='载入中…';
+ if(status.startsWith('r:')){try{await loadReports(status.slice(2));}catch(e){$('#msg').textContent=e.message==='forbidden'?'密钥不正确':'载入失败：'+e.message;$('#list').innerHTML='';}return;}
  try{const rows=await rpc('sanct_admin_list',{p_key:key,p_status:status});$('#msg').textContent=`共 ${rows.length} 条`;
   $('#list').innerHTML=rows.map(r=>`<div class="card"><div class="t">${esc(r.body)}</div><div class="m">${new Date(r.created_at).toLocaleString()} · 代祷 ${r.pray_count} · 举报 ${r.report_count}</div><div class="a">
    ${status!=='approved'?`<button class="ok" data-a="approved" data-id="${r.id}">公开</button>`:''}${status!=='hidden'?`<button data-a="hidden" data-id="${r.id}">隐藏</button>`:''}<button class="no" data-a="delete" data-id="${r.id}">删除</button></div></div>`).join('')||'<p style="color:#8f7f68">没有内容</p>';

@@ -5,15 +5,17 @@ const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem('sanct_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{if(v==null)localStorage.removeItem('sanct_'+k);else localStorage.setItem('sanct_'+k,JSON.stringify(v));}catch(e){}}};
 
 /* ---------- language & currency ---------- */
-const LANG=(()=>{const s=store.get('lang',null);if(s==='zh'||s==='en')return s;return /^zh/i.test(navigator.language||'')?'zh':'en';})();
-const DICT=window.I18N[LANG],SCR=window.SCRIPTURE[LANG];
-function t(k,v){let s=DICT[k];if(s==null)s=window.I18N.zh[k];if(s==null)return k;if(v)for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s;}
-document.documentElement.lang=LANG==='zh'?'zh-CN':'en';
-document.title=LANG==='zh'?'云上圣所 · Sanctuary':'Sanctuary · A church in the cloud';
+const LANGS=['en','fr','de','it','es','zh'];
+const LANG=(window.SANCT_LANG&&window.I18N[window.SANCT_LANG])?window.SANCT_LANG:'en';
+const DICT=window.I18N[LANG],SCR=window.SCRIPTURE[LANG]||window.SCRIPTURE.en;
+function t(k,v){let s=DICT[k];if(s==null)s=window.I18N.en[k];if(s==null)return k;if(v)for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s;}
+const LOCALE={en:'en-US',fr:'fr-FR',de:'de-DE',it:'it-IT',es:'es-ES',zh:'zh-CN'}[LANG];
+document.documentElement.lang=LANG==='zh'?'zh-CN':LANG;
+document.title=t('docTitle');
 document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
 let CUR=store.get('cur',null);
 if(CUR!=='eur'&&CUR!=='usd'){let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}CUR=/^Europe\//.test(tz)?'eur':'usd';}
-function price(c){try{return new Intl.NumberFormat(LANG==='zh'?'zh-CN':'en-US',{style:'currency',currency:CUR.toUpperCase(),minimumFractionDigits:c%100?2:0,maximumFractionDigits:2}).format(c/100);}catch(e){return (CUR==='eur'?'€':'$')+(c/100).toFixed(c%100?2:0);}}
+function price(c){try{return new Intl.NumberFormat(LOCALE,{style:'currency',currency:CUR.toUpperCase(),minimumFractionDigits:c%100?2:0,maximumFractionDigits:2}).format(c/100);}catch(e){return (CUR==='eur'?'€':'$')+(c/100).toFixed(c%100?2:0);}}
 const PRICE={candle:100,confession:990};
 
 const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
@@ -32,10 +34,12 @@ const myId=(()=>{let id=null;try{id=sessionStorage.getItem('sanct_id');}catch(e)
 /* ---------- account state ---------- */
 let token=store.get('tok',null),me=null,payOn=false;
 function myName(){return me&&me.show_name?me.name:null;}
+function myPub(){return me&&me.show_name?me.pub_id:null;}
 function setAcctBtn(){const b=$('#acctbtn');b.textContent=me?(me.name||'?').slice(0,1).toUpperCase():'👤';b.classList.toggle('in',!!me);}
 function logoutLocal(){token=null;me=null;store.set('tok',null);setAcctBtn();retrack();}
 async function loadMe(){if(!token||!sb){setAcctBtn();return;}try{const u=await rpc('sanct_me',{p_token:token});if(u){me=u;}else logoutLocal();}catch(e){}setAcctBtn();retrack();}
 async function loadConfig(){if(!sb)return;try{const c=await rpc('sanct_public_config');payOn=!!(c&&c.payments);}catch(e){}}
+const REF=(()=>{const q=new URLSearchParams(location.search).get('ref');if(q&&/^[a-f0-9]{4,12}$/i.test(q)){store.set('ref',{c:q,ts:Date.now()});return q;}const r=store.get('ref',null);return r&&Date.now()-r.ts<30*864e5?r.c:null;})();
 
 /* ---------- scripture ---------- */
 const VERSES=SCR.verses;
@@ -315,19 +319,19 @@ function setGhostName(o,n){n=n?String(n).slice(0,24):null;if(o.n===n)return;o.n=
 function removeGhost(id){const o=ghosts.get(id);if(!o)return;setGhostName(o,null);scene.remove(o.g);o.mat.dispose();o.halo.material.dispose();ghosts.delete(id);}
 let praying=false,onlineN=1;
 function myState(){if(P.mode==='locked')return P.eye<1.05?'kneel':'sit';return praying?'pray':'walk';}
-function prayers(){const names=[];let anon=0;if(myState()!=='walk'){if(myName())names.push(myName());else anon++;}ghosts.forEach(o=>{if(o.s!=='walk'&&o.g.visible){if(o.n)names.push(o.n);else anon++;}});return{names,anon,n:names.length+anon};}
+function prayers(){const names=[];let anon=0;if(myState()!=='walk'){if(myName())names.push({n:myName(),u:null});else anon++;}ghosts.forEach(o=>{if(o.s!=='walk'&&o.g.visible){if(o.n)names.push({n:o.n,u:o.u});else anon++;}});return{names,anon,n:names.length+anon};}
 function prayingCount(){return prayers().n;}
 const net={ch:null,ready:false,last:{x:0,z:0,y:0,s:'',t:0},
  send(ev,p){if(this.ch&&this.ready){try{this.ch.send({type:'broadcast',event:ev,payload:Object.assign({id:myId},p||{})});}catch(e){}}}};
 const myColor=Math.floor(Math.random()*6);
-function retrack(){if(net.ch&&net.ready&&!document.hidden){try{net.ch.track({c:myColor,n:myName()});}catch(e){}net.last.t=0;}if(room&&room.ready){try{room.ch.track({n:myName()});}catch(e){}}}
+function retrack(){if(net.ch&&net.ready&&!document.hidden){try{net.ch.track({c:myColor,n:myName(),u:myPub()});}catch(e){}net.last.t=0;}if(room&&room.ready){try{room.ch.track({n:myName(),u:myPub()});}catch(e){}}}
 function onPos(p){if(!p||p.id===myId)return;let o=ghosts.get(p.id);if(!o){if(ghosts.size>=40)return;o=makeGhost(p.c);ghosts.set(p.id,o);}
- o.tx=+p.x||0;o.tz=+p.z||0;o.tyaw=+p.y||0;o.s=p.s||'walk';o.seen=performance.now();if(o.fresh){o.x=o.tx;o.z=o.tz;o.yaw=o.tyaw;o.fresh=false;}o.g.visible=true;setGhostName(o,p.n);poseGhost(o);}
+ o.tx=+p.x||0;o.tz=+p.z||0;o.tyaw=+p.y||0;o.s=p.s||'walk';o.seen=performance.now();if(o.fresh){o.x=o.tx;o.z=o.tz;o.yaw=o.tyaw;o.fresh=false;}o.g.visible=true;o.u=p.u||null;setGhostName(o,p.n);poseGhost(o);}
 function updateOnline(){const el=$('#online');if(!net.ready){el.classList.remove('show');return;}el.classList.add('show');el.querySelector('span').textContent=t('onlineN',{n:onlineN});
  if(!$('#intro').classList.contains('hide'))$('#loading').textContent=onlineN>1?t('introOnline',{n:onlineN}):t('introQuiet');}
 function connect(){if(!sb)return;try{
  const ch=sb.channel('sanctuary-main',{config:{presence:{key:myId},broadcast:{self:false}}});net.ch=ch;
- ch.on('presence',{event:'sync'},()=>{const st=ch.presenceState();onlineN=Math.max(1,Object.keys(st).length);ghosts.forEach((o,id)=>{if(!st[id])removeGhost(id);else{const m=st[id][0];if(m&&'n' in m)setGhostName(o,m.n);}});updateOnline();});
+ ch.on('presence',{event:'sync'},()=>{const st=ch.presenceState();onlineN=Math.max(1,Object.keys(st).length);ghosts.forEach((o,id)=>{if(!st[id])removeGhost(id);else{const m=st[id][0];if(m&&'n' in m){o.u=m.u||null;setGhostName(o,m.n);}}});updateOnline();});
  ch.on('presence',{event:'leave'},({key})=>removeGhost(key));
  ch.on('broadcast',{event:'pos'},({payload})=>onPos(payload));
  ch.on('broadcast',{event:'candle'},()=>{lightNext();candles24++;if($('#intro').classList.contains('hide'))toast(t('someoneLit'));});
@@ -337,16 +341,16 @@ function connect(){if(!sb)return;try{
 }catch(e){net.ch=null;}}
 document.addEventListener('visibilitychange',()=>{if(!net.ch||!net.ready)return;try{if(document.hidden)net.ch.untrack();else retrack();}catch(e){}});
 function netTick(now,dt){if(net.ready&&!document.hidden){const l=net.last,s=myState();const moved=Math.hypot(P.x-l.x,P.z-l.z)>.06||Math.abs(P.yaw-l.y)>.08||s!==l.s;
- if((moved&&now-l.t>220)||now-l.t>4000){l.x=P.x;l.z=P.z;l.y=P.yaw;l.s=s;l.t=now;net.send('pos',{x:+P.x.toFixed(2),z:+P.z.toFixed(2),y:+P.yaw.toFixed(2),s,c:myColor,n:myName()});}}
+ if((moved&&now-l.t>220)||now-l.t>4000){l.x=P.x;l.z=P.z;l.y=P.yaw;l.s=s;l.t=now;net.send('pos',{x:+P.x.toFixed(2),z:+P.z.toFixed(2),y:+P.yaw.toFixed(2),s,c:myColor,n:myName(),u:myPub()});}}
  const k=1-Math.exp(-dt*7);ghosts.forEach(o=>{if(now-o.seen>15000)o.g.visible=false;o.x+=(o.tx-o.x)*k;o.z+=(o.tz-o.z)*k;o.yaw=angLerp(o.yaw,o.tyaw,k);o.g.position.set(o.x,floorH(o.x,o.z),o.z);o.g.rotation.y=o.yaw;});}
 
 /* ---------- prayer gatherings (rooms) ---------- */
 let room=null;
 function joinRoomChannel(id,onSync){leaveRoom();if(!sb)return;const ch=sb.channel('sanct-room-'+id,{config:{presence:{key:myId}}});room={id,ch,ready:false,members:{}};
  ch.on('presence',{event:'sync'},()=>{if(!room||room.ch!==ch)return;room.members=ch.presenceState();onSync&&onSync();});
- ch.subscribe(st=>{if(st==='SUBSCRIBED'&&room&&room.ch===ch){room.ready=true;try{ch.track({n:myName()});}catch(e){}}});}
+ ch.subscribe(st=>{if(st==='SUBSCRIBED'&&room&&room.ch===ch){room.ready=true;try{ch.track({n:myName(),u:myPub()});}catch(e){}}});}
 function leaveRoom(){if(room){try{sb.removeChannel(room.ch);}catch(e){}room=null;}}
-function roomPeople(){const names=[];let anon=0;if(!room)return{names,anon};Object.values(room.members).forEach(a=>{const m=a&&a[0];if(m&&m.n)names.push(m.n);else anon++;});return{names,anon};}
+function roomPeople(){const names=[];let anon=0;if(!room)return{names,anon};Object.entries(room.members).forEach(([k,a])=>{const m=a&&a[0];if(m&&m.n)names.push({n:m.n,u:k===myId?null:(m.u||null)});else anon++;});return{names,anon};}
 
 /* ---------- public group prayer (every :00 and :30, 5 minutes) ---------- */
 const G_PERIOD=30*60e3,G_WIN=5*60e3;let gWasLive=null,gNext=0;
@@ -424,7 +428,8 @@ function timerUI(root,minutes,onDone,opt){opt=opt||{};let t0=performance.now(),d
   if(left<=0&&!done){done=true;clearInterval(iv);log();bell(392);setTimeout(()=>bell(523.25,.5),600);onDone&&onDone();}},100);
  return()=>{clearInterval(iv);log();};}
 function amenHTML(){return`<div class="verse">${t('amen')}</div><div class="p" style="text-align:center">${t('amenP')}</div>`;}
-function peopleHTML(names,anon){if(!names.length&&!anon)return'';return`<div class="people"><div class="ref" style="margin:8px 0 6px">${t('roomWith')}</div>${names.map(n=>`<span class="chip">${esc(n)}</span>`).join('')}${anon?`<span class="chip dim">${t('roomAnon',{n:anon})}</span>`:''}</div>`;}
+function peopleHTML(names,anon){if(!names.length&&!anon)return'';const rep=names.some(p=>p.u);return`<div class="people"><div class="ref" style="margin:8px 0 6px">${t('roomWith')}</div>${names.map(p=>p.u?`<span class="chip rep" data-ru="${esc(p.u)}" data-rn="${esc(p.n)}" title="${esc(t('reportUser'))}">${esc(p.n)} <i>⚑</i></span>`:`<span class="chip">${esc(p.n)}</span>`).join('')}${anon?`<span class="chip dim">${t('roomAnon',{n:anon})}</span>`:''}${rep?`<div class="note" style="margin-top:4px">${t('reportUserP')}</div>`:''}</div>`;}
+$('#sheetBody').addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('[data-ru]');if(!c)return;e.preventDefault();openReport({type:'user',id:c.dataset.ru,label:c.dataset.rn});});
 
 function openPrayer(tab,autoMin){tab=tab||'quiet';const v=VERSES[verseIdx];
  const body=`<div class="tabs"><button data-t="quiet">${t('tQuiet')}</button><button data-t="lord">${t('tLord')}</button><button data-t="medi">${t('tMedi')}</button></div><div id="pt"></div>
@@ -440,7 +445,7 @@ function openPrayer(tab,autoMin){tab=tab||'quiet';const v=VERSES[verseIdx];
      pt.querySelector('#stopT').onclick=()=>show('quiet');};
     pt.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>start(+b.dataset.m));
     if(autoMin){const m=autoMin;autoMin=0;start(m,true);}}
-   else if(tb==='lord'){pt.innerHTML=`<div class="verse" style="font-size:17px">${SCR.lord[0]}</div><div class="ref">— ${SCR.lord[1]} · ${t('bibleV')}</div><div class="row"><button class="btn" id="lb">${t('lordBell')}</button></div>`;pt.querySelector('#lb').onclick=()=>{bell(392);toast(t('amenToast'));};}
+   else if(tb==='lord'){pt.innerHTML=`<div class="verse" style="font-size:17px">${SCR.lord[0]}</div><div class="ref">— ${SCR.lord[1]}${/^(cf|vgl)/.test(SCR.lord[1])?'':' · '+t('bibleV')}</div><div class="row"><button class="btn" id="lb">${t('lordBell')}</button></div>`;pt.querySelector('#lb').onclick=()=>{bell(392);toast(t('amenToast'));};}
    else{pt.innerHTML=`${verseHTML(v)}<ul class="q"><li>${t('mediRead')}</li><li>${t('mediThink')}</li><li>${t('mediAsk')}</li><li>${t('mediRest')}</li></ul>`;}}
   root.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.t));show(tab);return()=>{if(stop)stop();};});}
 
@@ -458,36 +463,80 @@ function openAccount(reason,after){if(me){openProfile();return;}let mode='login'
   <div class="note"><a href="/privacy.html" style="color:#bfa77c">${t('privacy')}</a></div>`;
   root.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{email=root.querySelector('#ae').value;mode=b.dataset.m;render(root);});
   root.querySelector('#ago').onclick=async()=>{const btn=root.querySelector('#ago');const e=root.querySelector('#ae').value.trim(),p=root.querySelector('#ap').value;let r;btn.disabled=true;
-   try{r=mode==='login'?await rpc('sanct_login',{p_email:e,p_password:p}):await rpc('sanct_register',{p_email:e,p_password:p,p_name:root.querySelector('#an').value.trim(),p_lang:LANG});}catch(_){r={error:'offline'};}
+   try{r=mode==='login'?await rpc('sanct_login',{p_email:e,p_password:p}):await rpc('sanct_signup',{p_email:e,p_password:p,p_name:root.querySelector('#an').value.trim(),p_lang:LANG,p_ref:REF});}catch(_){r={error:'offline'};}
    btn.disabled=false;if(!r||r.error){toast(t('aErr_'+((r&&r.error)||'offline')));return;}
-   token=r.token;store.set('tok',token);me=r.user;setAcctBtn();retrack();closeSheet();toast(t('welcome',{n:me.name}));if(after)setTimeout(after,350);};};
+   token=r.token;store.set('tok',token);me=r.user;setAcctBtn();retrack();closeSheet();toast(mode==='register'&&me.candle_credits>0?t('refWelcome'):t('welcome',{n:me.name}));if(after)setTimeout(after,350);};};
  openSheet(t('acctT'),'<div id="acc"></div>',root=>{render(root.querySelector('#acc'));});}
 function openProfile(){const u=me;const st=[t('statPray',{n:Math.round(u.seconds_prayed/60)}),t('statCandle',{n:u.candles}),t('statConfess',{n:u.confessions}),t('statGroup',{n:u.group_sessions})];
  openSheet(t('acctT'),`<div class="p">${esc(u.email)}</div><div class="stats">${st.map(s=>`<span class="chip">${s}</span>`).join('')}</div>
   <label class="lbl">${t('dname')}</label><input class="field" id="pn" maxlength="24" value="${esc(u.name)}">
   <label class="chk"><input type="checkbox" id="ps" ${u.show_name?'checked':''}> ${t('showName')}</label>
   <label class="lbl">${t('currency')}</label><div class="row" style="justify-content:flex-start"><button class="btn ${CUR==='eur'?'pri':''}" data-c="eur">EUR €</button><button class="btn ${CUR==='usd'?'pri':''}" data-c="usd">USD $</button></div>
-  <div class="row"><button class="btn pri" id="psave">${t('saveBtn')}</button><button class="btn" id="pout">${t('logout')}</button></div>`,root=>{
+  <div class="row"><button class="btn pri" id="psave">${t('saveBtn')}</button><button class="btn" id="pout">${t('logout')}</button></div>
+  <div class="sec">${t('invT')}</div><div class="p">${t('invStats',{v:u.ref_visits||0,i:u.invites||0,c:u.candle_credits||0})}</div><div class="row" style="justify-content:flex-start"><button class="btn" id="pinv">🎁 ${t('mInvite')}</button></div>`,root=>{
+  root.querySelector('#pinv').onclick=()=>openInvite();
   root.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{CUR=b.dataset.c;store.set('cur',CUR);root.querySelectorAll('[data-c]').forEach(x=>x.classList.toggle('pri',x===b));});
   root.querySelector('#psave').onclick=async()=>{let r;try{r=await rpc('sanct_update_profile',{p_token:token,p_name:root.querySelector('#pn').value.trim(),p_show_name:root.querySelector('#ps').checked,p_lang:LANG});}catch(_){r={error:'offline'};}
    if(r&&r.user){me=r.user;setAcctBtn();retrack();toast(t('saved'));}else{if(r&&r.error==='auth')logoutLocal();toast(t('aErr_'+((r&&r.error)||'offline')));}};
   root.querySelector('#pout').onclick=async()=>{try{await rpc('sanct_logout',{p_token:token});}catch(_){}logoutLocal();closeSheet();};});}
 $('#acctbtn').onclick=()=>openAccount();
 
-/* ---------- payments (PayPal; beta-free while payments are switched off) ---------- */
+/* ---------- modal layer (share / invite / report; sits above the sheet) ---------- */
+let modalEl=null;
+function closeModal(){if(modalEl){modalEl.remove();modalEl=null;}}
+function modal(title,html,init){closeModal();const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true"><div class="mhead"><b>${esc(title)}</b><button class="mx" aria-label="${esc(t('close'))}">✕</button></div><div class="mbody">${html}</div></div>`;
+ m.addEventListener('click',e=>{if(e.target===m)closeModal();});m.querySelector('.mx').onclick=closeModal;document.body.appendChild(m);modalEl=m;if(init)init(m.querySelector('.mbody'));}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&modalEl)closeModal();});
+
+/* ---------- sharing & referral ---------- */
+function track(kind,channel,target){if(!sb)return;rpc('sanct_track',{p_kind:kind,p_ref:kind==='visit'?REF:(me&&me.ref_code)||null,p_channel:channel||null,p_target:target||null}).catch(()=>{});}
+function shareUrl(params){const q=new URLSearchParams(params||{});if(me&&me.ref_code)q.set('ref',me.ref_code);const s=q.toString();return location.origin+'/'+(s?'?'+s:'');}
+function share(o){const url=shareUrl(o.params),text=o.text||t('shSite'),kind=o.kind||'site';
+ const open=()=>{const enc=encodeURIComponent,full=text+' '+url;
+  const ch=[['WhatsApp','https://wa.me/?text='+enc(full)],['Telegram','https://t.me/share/url?url='+enc(url)+'&text='+enc(text)],['X','https://twitter.com/intent/tweet?text='+enc(text)+'&url='+enc(url)],['Facebook','https://www.facebook.com/sharer/sharer.php?u='+enc(url)],[t('shEmail'),'mailto:?subject='+enc(t('shSubject'))+'&body='+enc(full)]];
+  modal(t('shareT'),`<div class="p">${esc(text)}</div><input class="field" id="shu" readonly value="${esc(url)}" style="margin-top:10px"><div class="row"><button class="btn pri" id="shc">🔗 ${t('shCopy')}</button></div>
+   <div class="row share">${ch.map(([n,h],i)=>`<a class="btn" data-ch="${i}" href="${esc(h)}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}${navigator.share?`<button class="btn" id="shm">${t('shMore')}</button>`:''}</div>`,root=>{
+   root.querySelector('#shc').onclick=async()=>{const inp=root.querySelector('#shu');let ok=false;try{await navigator.clipboard.writeText(url);ok=true;}catch(_){try{inp.select();ok=document.execCommand('copy');}catch(__){}}toast(ok?t('shCopied'):url);track('share','copy',kind);};
+   root.querySelectorAll('[data-ch]').forEach(a=>a.onclick=()=>track('share',['whatsapp','telegram','x','facebook','email'][+a.dataset.ch],kind));
+   const m=root.querySelector('#shm');if(m)m.onclick=()=>navigator.share({title:'Sanctuary',text,url}).then(()=>track('share','native',kind)).catch(()=>{});});};
+ if(navigator.share&&isTouch){navigator.share({title:'Sanctuary',text,url}).then(()=>track('share','native',kind)).catch(e=>{if(!e||e.name!=='AbortError')open();});}else open();}
+function openInvite(){
+ if(!me){modal(t('invT'),`<div class="p">${t('invP')}</div><div class="p" style="margin-top:8px">${t('invLogin')}</div><div class="row"><button class="btn pri" id="ivr">${t('register')}</button><button class="btn" id="ivs">${t('invShareAnyway')}</button></div>`,root=>{
+  root.querySelector('#ivr').onclick=()=>{closeModal();openAccount(null,()=>openInvite());};root.querySelector('#ivs').onclick=()=>{closeModal();share({kind:'invite'});};});return;}
+ const url=shareUrl({});
+ modal(t('invT'),`<div class="p">${t('invP')}</div><label class="lbl">${t('invLink')}</label><input class="field" readonly value="${esc(url)}"><div class="p" style="margin-top:10px">${t('invStats',{v:me.ref_visits||0,i:me.invites||0,c:me.candle_credits||0})}</div><div class="row"><button class="btn pri" id="ivs">📤 ${t('shareT')}</button></div>`,root=>{
+  root.querySelector('#ivs').onclick=()=>{closeModal();share({kind:'invite'});};});}
+
+/* ---------- reports & takedown requests ---------- */
+const REASONS=['spam','abuse','hate','sexual','violence','scam','illegal','copyright','privacy','other'];
+function openReport(o){const type=o.type||'other';let reason=type==='other'?'copyright':null;
+ const tn={prayer:'rpTypePrayer',room:'rpTypeRoom',user:'rpTypeUser'}[type];
+ const what=type==='other'?`<div class="p">${t('rpOtherP')}</div>`:`<label class="lbl">${t('rpWhat')}</label><div class="card"><div class="m" style="margin:0 0 4px">${t(tn)}</div><div class="t">${esc((o.label||'').slice(0,140))}</div></div>`;
+ modal(type==='other'?t('rpOther'):t('rpT'),`${type==='other'?'':`<div class="p">${t('rpP')}</div>`}${what}<label class="lbl">${t('rpReason')}</label><div class="row reasons" style="justify-content:flex-start">${REASONS.map(r=>`<button class="btn ${r===reason?'pri':''}" data-rs="${r}">${t('rs_'+r)}</button>`).join('')}</div>
+  <textarea class="field" id="rpd" maxlength="2000" placeholder="${esc(type==='other'?t('rpDetailsReq'):t('rpDetails'))}" style="min-height:${type==='other'?110:70}px;margin-top:10px"></textarea>
+  <input class="field" id="rpc" type="email" maxlength="200" placeholder="${esc(t('rpContact'))}" value="${esc(me&&me.email||'')}" style="margin-top:8px">
+  <div class="row"><button class="btn pri" id="rps">${t('rpSend')}</button></div>`,root=>{
+  root.querySelectorAll('[data-rs]').forEach(b=>b.onclick=()=>{reason=b.dataset.rs;root.querySelectorAll('[data-rs]').forEach(x=>x.classList.toggle('pri',x===b));});
+  root.querySelector('#rps').onclick=async()=>{if(!reason){toast(t('rpReason')+'?');return;}const d=root.querySelector('#rpd').value.trim();if(type==='other'&&d.length<10){toast(t('rpErr_need_details'));return;}
+   const btn=root.querySelector('#rps');btn.disabled=true;let r;
+   try{r=await rpc('sanct_file_report',{p_type:type,p_target:o.id?String(o.id):null,p_label:(o.label||'').slice(0,140)||null,p_reason:reason,p_details:d||null,p_contact:root.querySelector('#rpc').value.trim()||null,p_token:token});}catch(_){r={error:'offline'};}
+   btn.disabled=false;if(!r||r.error){const k='rpErr_'+((r&&r.error)||'');toast(DICT[k]||window.I18N.en[k]?t(k):t('aErr_offline'));return;}
+   closeModal();toast(r.dup?t('rpDup'):t('rpThanks'));if(o.done)o.done();};});}
+
+/* ---------- payments (Stripe Checkout; beta-free while payments are switched off) ---------- */
 async function buy(kind){if(!sb){toast(t('aErr_offline'));return null;}let r;
  try{r=await rpc('sanct_create_order',{p_token:token,p_kind:kind,p_currency:CUR});}catch(_){toast(t('aErr_offline'));return null;}
  if(!r||r.error){if(r&&r.error==='auth'){logoutLocal();openAccount(t('needLogin'));}else toast(t('aErr_'+((r&&r.error)||'offline')));return null;}
  if(r.status==='beta_free')return r.id;
- try{const res=await fetch(SB_URL+'/functions/v1/sanct-paypal-checkout',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({token,order:r.id,lang:LANG,origin:location.origin})});
-  const j=await res.json();if(j&&j.url){store.set('pend',{id:r.id,kind,ts:Date.now()});location.href=j.url;return null;}}catch(_){}
+ try{const res=await fetch(SB_URL+'/functions/v1/sanct-stripe-checkout',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({token,order:r.id,lang:LANG,origin:location.origin})});
+  const j=await res.json();if(j&&j.url){store.set('pend',{id:r.id,kind,ts:Date.now()});location.href=j.url;return null;}if(j&&j.error==='not_configured'){toast(t('payUnavail'));return null;}}catch(_){}
  toast(t('payFail'));return null;}
 async function useOrder(id){try{return await rpc('sanct_use_order',{p_token:token,p_id:id});}catch(_){return{error:'offline'};}}
 let resume=null;
 async function checkReturn(){const q=new URLSearchParams(location.search);const p=store.get('pend',null);if(!q.has('pay')&&!p)return;
  if(q.has('pay'))history.replaceState(null,'',location.pathname);
  if(!p||!token)return;if(q.get('pay')==='cancel'||Date.now()-p.ts>36e5){store.set('pend',null);if(q.get('pay')==='cancel')toast(t('payCancel'));return;}
- if(q.get('pay')==='ok'){toast(t('payWaiting'));try{await fetch(SB_URL+'/functions/v1/sanct-paypal-capture',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({token,order:p.id})});}catch(_){}}
+ if(q.get('pay')==='ok'){toast(t('payWaiting'));try{await fetch(SB_URL+'/functions/v1/sanct-stripe-confirm',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+SB_KEY},body:JSON.stringify({token,order:p.id})});}catch(_){}}
  for(let i=0;i<12;i++){let s=null;try{s=await rpc('sanct_order_status',{p_token:token,p_id:p.id});}catch(_){}
   if(s==='paid'){store.set('pend',null);resume=p;toast(t('payDone'));return;}if(s==='used'||s==='failed'||s==null){store.set('pend',null);return;}await new Promise(r=>setTimeout(r,1500));}}
 function priceNote(){return payOn?t('payNote'):t('betaFree');}
@@ -496,15 +545,18 @@ function priceNote(){return payOn?t('payNote'):t('betaFree');}
 function openCandle(){
  openSheet(t('candleT'),`<div class="p">${t('candleP')}</div>
  <input class="field" id="cn" maxlength="40" placeholder="${t('candleFor')}" style="margin-top:12px">
- <div class="row"><button class="btn pri" id="cl">${t('lightFor',{p:price(PRICE.candle)})}</button></div>
+ <div class="row">${me&&me.candle_credits>0?`<button class="btn pri" id="cfree">${t('credit',{n:me.candle_credits})}</button>`:''}<button class="btn ${me&&me.candle_credits>0?'':'pri'}" id="cl">${t('lightFor',{p:price(PRICE.candle)})}</button></div>
  <div class="note">${priceNote()}<br>${sb?t('candles24',{n:candles24})+' ':''}${me?t('myCandles',{n:me.candles}):''}</div>`,root=>{
-  root.querySelector('#cl').onclick=()=>{const name=root.querySelector('#cn').value.trim();requireLogin(async()=>{const id=await buy('candle');if(id)lightPaid(id,name);});};});}
-async function lightPaid(id,name){const r=await useOrder(id);if(!r||r.error){toast(t('aErr_'+((r&&r.error)||'offline')));return;}
+  root.querySelector('#cl').onclick=()=>{const name=root.querySelector('#cn').value.trim();requireLogin(async()=>{const id=await buy('candle');if(id)lightPaid(id,name);});};
+  const f=root.querySelector('#cfree');if(f)f.onclick=async()=>{f.disabled=true;const name=root.querySelector('#cn').value.trim();let r;try{r=await rpc('sanct_use_credit',{p_token:token});}catch(_){r={error:'offline'};}f.disabled=false;
+   if(!r||r.error){if(r&&r.error==='auth')logoutLocal();toast(t('aErr_'+((r&&r.error)||'offline')));return;}lightDone(r,name);};});}
+async function lightPaid(id,name){const r=await useOrder(id);if(!r||r.error){toast(t('aErr_'+((r&&r.error)||'offline')));return;}lightDone(r,name);}
+function lightDone(r,name){
  const i=lightNext();if(r.candles24)candles24=r.candles24;bell(659.25,.35);net.send('candle');loadMe();
  const s=slots[i];closeSheet();P.mode='anim';moveTo({x:-9.1,z:Math.max(.4,Math.min(3.6,s.z)),eye:1.5,yaw:Math.PI/2,pitch:-.35},1.0,()=>{P.mode='walk';});
  const who=name?t('candleWho',{n:esc(name)}):'';
  openSheet(t('candleLit'),`<div class="verse">🕯</div><div class="p" style="text-align:center">${t('candleLitP',{who})}</div>${verseHTML(VERSES[3])}
-  <div class="row"><button class="btn pri" id="q1">${t('quiet1')}</button><button class="btn" id="cl2">${t('close')}</button></div>`,r2=>{r2.querySelector('#cl2').onclick=closeSheet;
+  <div class="row"><button class="btn pri" id="q1">${t('quiet1')}</button><button class="btn" id="cl2">${t('close')}</button></div><div class="row"><button class="btn" id="csh">📤 ${t('shCandleBtn')}</button></div>`,r2=>{r2.querySelector('#cl2').onclick=closeSheet;r2.querySelector('#csh').onclick=()=>share({kind:'candle',text:t('shCandle'),params:{go:'candle'}});
   r2.querySelector('#q1').onclick=()=>{r2.innerHTML=`${breathHTML(1)}<div class="row"><button class="btn" id="x1">${t('end')}</button></div>`;const stop=timerUI(r2,1,()=>{r2.innerHTML=`<div class="verse">${t('amen')}</div><div class="row"><button class="btn" id="x2">${t('close')}</button></div>`;r2.querySelector('#x2').onclick=closeSheet;});r2.querySelector('#x1').onclick=()=>closeSheet();sheetCleanup=stop;};});}
 
 /* ---------- free reflection room ---------- */
@@ -581,17 +633,19 @@ function peaceCard(pen){const W=1080,H=1350,[c,g]=mkC(W,H);const gr=g.createRadi
  try{const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='peace-card.png';document.body.appendChild(a);a.click();a.remove();}catch(_){}}
 
 /* ---------- prayer wall ---------- */
-function openWall(){const mine=store.get('wall2',[]);const prayed=store.get('prayed2',{});const reported=store.get('reported',{});let items=[],state=sb?'loading':'offline';
+function openWall(focus){const mine=store.get('wall2',[]);const prayed=store.get('prayed2',{});const reported=store.get('reported',{});let items=[],state=sb?'loading':'offline';
  const draw=root=>{const box=root.querySelector('#cards');let h='';
-  mine.forEach(c=>{h+=`<div class="card"><div class="t">${esc(c.t)}</div><div class="m"><span>${t('yourReq')}<span class="tag">${t('reviewing')}</span></span><span>${new Date(c.at).toLocaleDateString()}</span></div></div>`;});
+  mine.forEach(c=>{h+=`<div class="card"><div class="t">${esc(c.t)}</div><div class="m"><span>${t('yourReq')}<span class="tag">${t('reviewing')}</span></span><span>${new Date(c.at).toLocaleDateString(LOCALE)}</span></div></div>`;});
   if(state==='loading')h+=`<div class="p" style="text-align:center;padding:14px">${t('wallLoading')}</div>`;
   else if(state==='offline')h+=`<div class="p" style="text-align:center;padding:14px">${t('wallOffline')}</div>`;
   else if(!items.length)h+=`<div class="p" style="text-align:center;padding:14px">${t('wallEmpty')}</div>`;
-  items.forEach(c=>{if(reported[c.id])return;const done=prayed[c.id];h+=`<div class="card"><div class="t">${esc(c.body)}</div><div class="m"><span>${t('anon')} · ${new Date(c.created_at).toLocaleDateString()} · <a href="#" data-r="${c.id}" style="color:#8a7a62">${t('report')}</a></span><button class="btn" data-id="${c.id}">${done?t('prayed'):t('prayFor')} · ${c.pray_count}</button></div></div>`;});
+  const list=focus?[...items].sort((a,b)=>(b.id===focus)-(a.id===focus)):items;
+  list.forEach(c=>{if(reported[c.id])return;const done=prayed[c.id];h+=`<div class="card${c.id===focus?' focus':''}"><div class="t">${esc(c.body)}</div><div class="m"><span>${t('anon')} · ${new Date(c.created_at).toLocaleDateString(LOCALE)} · <a href="#" data-r="${c.id}" style="color:#8a7a62">${t('report')}</a> · <a href="#" data-sh="${c.id}" style="color:#bfa77c">${t('shPrayBtn')}</a></span><button class="btn" data-id="${c.id}">${done?t('prayed'):t('prayFor')} · ${c.pray_count}</button></div></div>`;});
   box.innerHTML=h;
+  box.querySelectorAll('[data-sh]').forEach(a=>a.onclick=e=>{e.preventDefault();const it=items.find(x=>x.id===a.dataset.sh);if(it)share({kind:'prayer',text:t('shPray',{t:it.body.length>90?it.body.slice(0,88)+'…':it.body}),params:{pray:it.id}});});
   box.querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{const id=b.dataset.id;if(prayed[id])return;prayed[id]=1;store.set('prayed2',prayed);bell(587.33,.25);toast(t('prayedToast'));
    const it=items.find(x=>x.id===id);if(it)it.pray_count++;draw(root);try{const n=await rpc('sanct_pray',{p_id:id});if(it&&n>=0){it.pray_count=n;draw(root);}}catch(_){}});
-  box.querySelectorAll('[data-r]').forEach(a=>a.onclick=async e=>{e.preventDefault();const id=a.dataset.r;reported[id]=1;store.set('reported',reported);draw(root);toast(t('reportedToast'));try{await rpc('sanct_report',{p_id:id});}catch(_){} });};
+  box.querySelectorAll('[data-r]').forEach(a=>a.onclick=e=>{e.preventDefault();const id=a.dataset.r;const it=items.find(x=>x.id===id);openReport({type:'prayer',id,label:it?it.body:'',done:()=>{reported[id]=1;store.set('reported',reported);draw(root);}});});};
  const load=async root=>{if(!sb){state='offline';draw(root);return;}try{items=await rpc('sanct_list_prayers')||[];state='ok';}catch(_){state='offline';}draw(root);};
  openSheet(t('wallT'),`<div class="p">${t('wallP')}</div>
   <textarea class="field" id="wt" maxlength="120" placeholder="${t('wallPh')}" style="min-height:80px;margin-top:10px"></textarea>
@@ -604,10 +658,11 @@ function openWall(){const mine=store.get('wall2',[]);const prayed=store.get('pra
 /* ---------- gatherings sheet ---------- */
 function openGroup(){let rooms=[],iv=null,startIn=0,dur=10;
  const drawPublic=root=>{const g=groupInfo();root.querySelector('#gpub').innerHTML=g.live?`<div class="verse">${t('gLiveLeft',{t:mmss(g.left)})}</div><div class="ref">${t('gNow',{n:prayingCount()})}</div><div class="row"><button class="btn pri" id="gj">${t('gJoin')}</button></div>`
-   :`<div class="verse">${t('gStartsIn',{t:mmss(g.until)})}</div><div class="p" style="text-align:center">${t('gBellNote')}</div>`;const j=root.querySelector('#gj');if(j)j.onclick=()=>joinPublic();};
+   :`<div class="verse">${t('gStartsIn',{t:mmss(g.until)})}</div><div class="p" style="text-align:center">${t('gBellNote')}</div><div class="row"><button class="btn" id="ginv">📤 ${t('shGroupBtn')}</button></div>`;const j=root.querySelector('#gj');if(j)j.onclick=()=>joinPublic();const gi=root.querySelector('#ginv');if(gi)gi.onclick=()=>share({kind:'group',text:t('shGroup'),params:{go:'group'}});};
  const drawRooms=root=>{const now=Date.now();const el=root.querySelector('#grooms');if(!sb){el.innerHTML='';return;}
-  el.innerHTML=rooms.length?rooms.map((r,i)=>{const st=new Date(r.starts_at).getTime(),live=now>=st;return`<div class="card"><div class="t">${esc(r.topic)}</div><div class="m"><span>${t('gHost',{n:esc(r.host_name||'—')})} · ${live?`<b style="color:#8fd18b">${t('gLive')}</b>`:t('gIn',{t:mmss(st-now)})} · ${t('gMins',{n:r.duration_min})}</span><button class="btn" data-r="${i}">${t('gEnter')}</button></div></div>`;}).join(''):`<div class="p">${t('gNoRooms')}</div>`;
-  el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const r=rooms[+b.dataset.r];requireLogin(()=>joinRoom(r));});};
+  el.innerHTML=rooms.length?rooms.map((r,i)=>{const st=new Date(r.starts_at).getTime(),live=now>=st;return`<div class="card"><div class="t">${esc(r.topic)}</div><div class="m"><span>${t('gHost',{n:esc(r.host_name||'—')})} · ${live?`<b style="color:#8fd18b">${t('gLive')}</b>`:t('gIn',{t:mmss(st-now)})} · ${t('gMins',{n:r.duration_min})}</span><span><a href="#" data-rr="${i}" title="${esc(t('report'))}" style="color:#8a7a62;margin-right:10px">⚑</a><button class="btn" data-r="${i}">${t('gEnter')}</button></span></div></div>`;}).join(''):`<div class="p">${t('gNoRooms')}</div>`;
+  el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const r=rooms[+b.dataset.r];requireLogin(()=>joinRoom(r));});
+  el.querySelectorAll('[data-rr]').forEach(a=>a.onclick=e=>{e.preventDefault();const r=rooms[+a.dataset.rr];openReport({type:'room',id:r.id,label:r.topic,done:()=>{rooms=rooms.filter(x=>x!==r);drawRooms(root);}});});};
  const drawCreate=root=>{const el=root.querySelector('#gcreate');if(!sb){el.innerHTML='';return;}
   el.innerHTML=`<input class="field" id="gt" maxlength="60" placeholder="${t('gTopic')}"><label class="lbl">${t('gStart')}</label><div class="row" style="justify-content:flex-start">${[[0,'gNowOpt'],[15,'gIn15'],[30,'gIn30'],[60,'gIn60']].map(([v,k])=>`<button class="btn ${startIn===v?'pri':''}" data-s="${v}">${t(k)}</button>`).join('')}</div>
    <label class="lbl">${t('gDur')}</label><div class="row" style="justify-content:flex-start">${[5,10,15,30].map(v=>`<button class="btn ${dur===v?'pri':''}" data-d="${v}">${t('gMins',{n:v})}</button>`).join('')}</div><div class="row"><button class="btn pri" id="gc">${t('gCreateBtn')}</button></div>`;
@@ -623,8 +678,10 @@ function openGroup(){let rooms=[],iv=null,startIn=0,dur=10;
 function joinPublic(){const g=groupInfo();const mins=g.live?Math.max(.5,g.left/60e3):3;sitQuick(()=>openPrayer('quiet',mins));}
 function joinRoom(r){sitQuick(()=>openRoomPrayer(r));}
 function openRoomPrayer(r){let stop=null,iv=null,startedT=false;const st=new Date(r.starts_at).getTime(),endT=st+r.duration_min*60e3;
- openSheet(r.topic,`<div class="ref">${t('gHost',{n:esc(r.host_name||'—')})}</div><div id="rp"></div><div id="rppl"></div><div class="note">${t('prayNote')}</div>`,root=>{
+ openSheet(r.topic,`<div class="ref">${t('gHost',{n:esc(r.host_name||'—')})}</div><div id="rp"></div><div id="rppl"></div><div class="row"><button class="btn" id="rinv">📤 ${t('shRoomBtn')}</button></div><div class="note">${t('prayNote')} · <a href="#" id="rrep" style="color:#8a7a62">${t('reportRoom')}</a></div>`,root=>{
   const rp=root.querySelector('#rp'),pp=root.querySelector('#rppl');
+  root.querySelector('#rinv').onclick=()=>share({kind:'room',text:t('shRoom',{t:r.topic}),params:{room:r.id}});
+  root.querySelector('#rrep').onclick=e=>{e.preventDefault();openReport({type:'room',id:r.id,label:r.topic});};
   const drawPeople=()=>{const p=roomPeople();pp.innerHTML=peopleHTML(p.names,p.anon);};
   joinRoomChannel(r.id,drawPeople);
   const tick=()=>{const now=Date.now();if(now<st){rp.innerHTML=`<div class="verse">${t('roomWait',{t:mmss(st-now)})}</div>${verseHTML(VERSES[verseIdx])}`;return;}
@@ -644,12 +701,14 @@ function goDo(kind){
  if(kind==='wall')return tele(-5.2,14.5,Math.PI/2,()=>openWall());
  if(kind==='verse')return tele(3.2,-5.6,0,()=>openVerse());}
 document.querySelectorAll('#dock [data-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();goDo(b.dataset.go);});
+function langRow(){return`<div class="row langs" style="justify-content:flex-start">${LANGS.map(l=>`<button class="btn ${l===LANG?'pri':''}" data-lang="${l}">${({en:'English',fr:'Français',de:'Deutsch',it:'Italiano',es:'Español',zh:'中文'})[l]}</button>`).join('')}</div>`;}
+function bindLang(root){root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{if(b.dataset.lang===LANG)return;store.set('lang',b.dataset.lang);location.reload();});}
 function openMenu(){openSheet(t('menuT'),`<div class="sec" style="margin-top:4px;border:none;padding-top:0">${t('goT')}</div><div class="tele">${PLACES.map((p,i)=>`<button class="btn" data-i="${i}">${t(p[0])}<small>${t(p[0]+'S')}</small></button>`).join('')}</div>
- <div class="sec">${t('mSettings')}</div>
- <div class="row" style="justify-content:flex-start"><button class="btn" id="mlang">🌐 ${LANG==='zh'?'English':'中文'}</button><button class="btn" id="mmusic">♪ ${t('mMusic')} · ${audioOn?t('mOn'):t('mOff')}</button><button class="btn" id="mverse">📖 ${t('verseT')}</button></div>
- <div class="note"><a href="/privacy.html" style="color:#bfa77c">${t('privacy')}</a> · ${t('goTip')}</div>`,root=>{
+ <div class="row" style="justify-content:flex-start"><button class="btn pri" id="minv">🎁 ${t('mInvite')}</button><button class="btn" id="mverse">📖 ${t('verseT')}</button><button class="btn" id="mmusic">♪ ${t('mMusic')} · ${audioOn?t('mOn'):t('mOff')}</button></div>
+ <div class="sec">🌐 ${t('langT')}</div>${langRow()}
+ <div class="note"><a href="/privacy.html" style="color:#bfa77c">${t('privacy')}</a> · <a href="#" id="mrep" style="color:#bfa77c">${t('mReport')}</a><br>${t('goTip')}</div>`,root=>{
  root.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const tg=PLACES[+b.dataset.i][1];tele(tg.x,tg.z,tg.yaw);});
- root.querySelector('#mlang').onclick=()=>{store.set('lang',LANG==='zh'?'en':'zh');location.reload();};
+ bindLang(root);root.querySelector('#minv').onclick=()=>openInvite();root.querySelector('#mrep').onclick=e=>{e.preventDefault();openReport({type:'other'});};
  root.querySelector('#mmusic').onclick=()=>{setAudio(!audioOn);openMenu();};
  root.querySelector('#mverse').onclick=()=>goDo('verse');});}
 $('#menubtn').onclick=openMenu;
@@ -711,9 +770,22 @@ if(isIOS&&!standalone)$('#installLink').style.display='inline';
 $('#installLink').onclick=e=>{e.preventDefault();if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;}else if(isIOS)toast(t('iosInstall'));};
 function begin(kind){$('#intro').classList.add('hide');document.body.classList.add('in');setAudio(true);
  if(resume){const r=resume;resume=null;if(r.kind==='candle')setTimeout(()=>lightPaid(r.id,''),500);else setTimeout(()=>startConfession(r.id),500);return;}
+ if(typeof kind==='function'){kind();return;}
  if(kind&&kind!=='explore'){goDo(kind);return;}
  const h=$('#hint');h.textContent=t(isTouch?'hintTouch':'hintDesk');h.style.opacity=1;hintT=7;
  P.mode='anim';P.z=19.6;moveTo({x:0,z:16.5,eye:1.65,yaw:0,pitch:0},2.4,()=>{P.mode='walk';});}
 document.querySelectorAll('#intro [data-go]').forEach(b=>b.onclick=()=>begin(b.dataset.go));
+/* landing from shared links: ?ref= ?room= ?pray= ?go= ?report=1 */
+(function landing(){const q=new URLSearchParams(location.search);const room=q.get('room'),pray=q.get('pray'),go=q.get('go'),report=q.get('report');
+ ['ref','room','pray','go','report'].forEach(k=>q.delete(k));if(room||pray||go||report||new URLSearchParams(location.search).has('ref')){const r=q.toString();history.replaceState(null,'',location.pathname+(r?'?'+r:''));}
+ if(REF)setTimeout(()=>{if(!(me&&me.ref_code===REF))track('visit','link');},1500);
+ const land=$('#land');const show=(h,btn,fn)=>{land.innerHTML=`<div>${h}</div>${btn?`<button class="btn pri" id="landgo">${btn}</button>`:''}`;land.hidden=false;const b=$('#landgo');if(b)b.onclick=()=>begin(fn);};
+ const uuid=/^[0-9a-f-]{36}$/i;
+ if(report){show(t('rpOther'),t('mReport'),()=>openReport({type:'other'}));return;}
+ if(room&&uuid.test(room)&&sb){rpc('sanct_get_room',{p_id:room}).then(r=>{if(r&&r.id)show(`${t('landRoom')}<br><b>“${esc(r.topic)}”</b> · ${t('gHost',{n:esc(r.host_name||'—')})}`,t('landRoomBtn'),()=>requireLogin(()=>joinRoom(r)));else show(t('roomGone'),t('tlGroup'),()=>openGroup());}).catch(()=>{});return;}
+ if(pray&&uuid.test(pray)){show(t('landPray'),t('landPrayBtn'),()=>tele(-5.2,14.5,Math.PI/2,()=>openWall(pray)));return;}
+ if(go&&['pray','candle','confess','group','wall'].includes(go)){show(REF?t('landRef'):t('introShort').split('<br>')[0],t('tl'+go[0].toUpperCase()+go.slice(1)),go);return;}
+ if(REF)show(t('landRef'),null);})();
 $('#tCandleP').textContent=price(PRICE.candle);$('#tConfessP').textContent=price(PRICE.confession);
+{const lr=$('#introLang');if(lr){lr.innerHTML=langRow();bindLang(lr);}}
 })();

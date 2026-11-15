@@ -1,107 +1,124 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>隐私与使用说明 · Privacy & Terms · Sanctuary</title>
+<title>Privacy & Terms · Sanctuary</title>
 <meta name="theme-color" content="#0c0907">
 <link rel="icon" href="/icon-192.png">
 <style>
-body{margin:0;background:#0c0907;color:#efe4d0;font-family:"Noto Serif SC","Songti SC","STSong",Georgia,serif;line-height:1.9}
-main{max-width:700px;margin:0 auto;padding:36px 22px 80px}
-h1{color:#f0d49a;font-weight:600;letter-spacing:.08em;font-size:26px;margin:0 0 4px}
-h2{color:#d9b26a;font-size:18px;margin:30px 0 6px;font-weight:600}
+body{margin:0;background:#0c0907;color:#efe4d0;font-family:"Noto Serif SC","Songti SC","STSong",Georgia,serif;line-height:1.8}
+main{max-width:720px;margin:0 auto;padding:30px 22px 80px}
+h1{color:#f0d49a;font-weight:600;letter-spacing:.05em;font-size:26px;margin:14px 0 4px}
+h2{color:#d9b26a;font-size:18px;margin:28px 0 6px;font-weight:600}
 p,li{color:#cbbb9f;font-size:15px}
 a{color:#f0d49a}
 .sub{color:#8f7f68;font-size:13px}
-.sw{float:right;border:1px solid rgba(217,178,106,.4);border-radius:999px;padding:4px 12px;background:none;color:#f0d49a;cursor:pointer;font-size:13px}
-.back{display:inline-block;margin-top:30px;padding:10px 18px;border:1px solid rgba(217,178,106,.4);border-radius:999px;text-decoration:none}
-[data-l]{display:none}
-body.zh [data-l=zh],body.en [data-l=en]{display:block}
+.langs{display:flex;flex-wrap:wrap;gap:6px}
+.langs button{border:1px solid rgba(217,178,106,.4);border-radius:999px;padding:4px 12px;background:none;color:#f0d49a;cursor:pointer;font-size:13px;font-family:inherit}
+.langs button.on{background:rgba(217,178,106,.25)}
+.back,.cta{display:inline-block;margin-top:14px;padding:10px 18px;border:1px solid rgba(217,178,106,.4);border-radius:999px;text-decoration:none;margin-right:8px}
 </style>
 </head>
 <body>
 <main>
-<button class="sw" id="sw">EN / 中</button>
-
-<section data-l="zh">
-<h1>隐私与使用说明</h1>
-<div class="sub">云上圣所 · Sanctuary · 更新于 2026 年 11 月</div>
-<h2>这是什么</h2>
-<p>云上圣所是一座线上的虚拟教堂，供人随时进入、安静祷告。它采用跨教派适用的祷告、读经与个人省察方式。这里没有虚构的圣职人员。</p>
-<h2>忏悔室与省察室不是圣事</h2>
-<p>忏悔室提供的是私密的、引导式的个人认罪与悔改祷告；省察室是免费的简短版本。二者都<b>不是</b>天主教的告解圣事或任何教会的圣礼，也<b>不宣告赦罪</b>。付费购买的是引导内容与体验，不是赦免。如有需要，请联系你所在教会的牧者或神父。</p>
-<h2>账号</h2>
-<p>浏览、祷告、点击代祷不需要账号。点蜡烛、进入忏悔室、发起或加入祷告会需要注册账号。我们保存：邮箱、显示名称、经过不可逆加密（bcrypt）处理的密码，以及祷告时长、蜡烛数、忏悔次数、参加集体祷告次数等统计数字。你可以选择是否在祷告会和圣所中显示你的名字。</p>
-<h2>哪些内容不会离开你的设备</h2>
-<ul>
-<li><b>忏悔室和省察室里写下的文字</b>：只存在于当前页面的内存中，不上传、不保存，结束时一键销毁。</li>
-<li><b>「开口说」时的声音</b>：只在本机计算音量，不录音、不上传。</li>
-<li><b>点蜡烛时填写的名字</b>：不上传。</li>
-<li>我们只记录「完成了一次忏悔」这件事，不记录任何内容。</li>
-</ul>
-<h2>哪些内容会发送到服务器</h2>
-<ul>
-<li><b>你在圣所里的位置与姿态</b>：实时发给同时在线的访客，用来显示你的身影（如你选择显示名字，也会附上显示名称）。不保存。</li>
-<li><b>代祷墙内容</b>：经人工审核后匿名公开。请勿写真实姓名、电话、地址等信息。</li>
-<li><b>祷告会主题</b>：你发起的祷告会主题和你的显示名称会公开展示，直到祷告会结束。</li>
-<li><b>订单</b>：蜡烛（1 欧元 / 1 美元）和忏悔（9.90 欧元 / 9.90 美元）的订单记录。付款将通过 PayPal 完成，我们不会接触或保存你的银行卡、PayPal 账号密码。</li>
-<li>为防止滥用，服务器会保存由网络地址生成的不可逆哈希值，不保存原始 IP 地址。</li>
-</ul>
-<h2>付款与退款</h2>
-<p>在线支付开放前为免费测试。开放后，蜡烛和忏悔为一次性的数字体验，开始使用后即视为已提供；若扣款后功能无法使用，请写信给我们，核实后全额退款。</p>
-<h2>代祷墙与祷告会规则</h2>
-<p>请彼此尊重。广告、联系方式、攻击他人或任何宗教、群体，以及违法或不当内容，一律不会公开。被多位访客举报的内容会自动隐藏。</p>
-<h2>危机求助</h2>
-<p>如果你正处在危机中，或有伤害自己的念头，请立即联系当地的紧急服务或心理援助热线，也可以告诉一位你信任的人。</p>
-<h2>经文</h2>
-<p>中文经文引自《圣经·和合本》（1919，公有领域），英文经文引自 World English Bible（公有领域）。场景与美术均为原创。</p>
-<h2>删除账号与联系</h2>
-<p>如需删除账号及全部数据、删除代祷内容，或有任何问题，请写信至 <a href="mailto:289021604@qq.com">289021604@qq.com</a>（289021604@qq.com）。</p>
-<a class="back" href="/">← 回到圣所</a>
-</section>
-
-<section data-l="en">
-<h1>Privacy & Terms</h1>
-<div class="sub">Sanctuary · a church in the cloud · Updated November 2026</div>
-<h2>What this is</h2>
-<p>Sanctuary is a virtual church online, open at any time for quiet prayer. It uses forms of prayer, scripture reading and self-examination shared across Christian traditions. There are no fictional clergy here.</p>
-<h2>The confessional is not a sacrament</h2>
-<p>The confessional offers private, guided personal confession and prayers of repentance; the reflection room is a free short version. Neither is the Sacrament of Reconciliation or any church sacrament, and neither pronounces absolution. What you pay for is the guided content and experience, not forgiveness. If you need a sacrament, please contact a pastor or priest of your church.</p>
-<h2>Accounts</h2>
-<p>You can browse, pray and pray for others without an account. Lighting candles, the confessional, and starting or joining gatherings require an account. We store your email, display name, a one-way (bcrypt) hash of your password, and simple counts (minutes prayed, candles, confessions, group prayers). You choose whether your name is shown in gatherings and in the sanctuary.</p>
-<h2>What never leaves your device</h2>
-<ul>
-<li><b>Anything you write in the confessional or reflection room</b> — it lives only in the page’s memory, is never uploaded or saved, and is erased at the end.</li>
-<li><b>Your voice when you “speak” a confession</b> — only the volume is measured on your device; nothing is recorded or uploaded.</li>
-<li><b>Names you type when lighting a candle.</b></li>
-<li>We only record that a confession was completed — never its content.</li>
-</ul>
-<h2>What is sent to our servers</h2>
-<ul>
-<li><b>Your position and posture in the sanctuary</b>, shared live with other visitors to show your presence (with your display name if you allow it). Not stored.</li>
-<li><b>Prayer wall posts</b>, published anonymously after human review. Do not include names, phone numbers or addresses.</li>
-<li><b>Gathering topics</b> you create are shown publicly with your display name until the gathering ends.</li>
-<li><b>Orders</b> for candles (€1 / $1) and confessions (€9.90 / $9.90). Payments will be completed through PayPal; we never see or store your card or PayPal credentials.</li>
-<li>To prevent abuse we store a one-way hash derived from your network address, never the raw IP address.</li>
-</ul>
-<h2>Payments & refunds</h2>
-<p>Until online payment opens, everything is free (beta). Afterwards, candles and confessions are one-time digital experiences, considered delivered once started. If you were charged but the feature did not work, write to us and we will refund you in full after checking.</p>
-<h2>Community rules</h2>
-<p>Please respect one another. Ads, contact details, attacks on people, faiths or groups, and illegal or inappropriate content will not be published. Content reported by several visitors is hidden automatically.</p>
-<h2>If you are in crisis</h2>
-<p>If you are in crisis or thinking about harming yourself, please contact your local emergency services or a crisis line right away, or tell someone you trust.</p>
-<h2>Scripture</h2>
-<p>Chinese scripture: Chinese Union Version (1919, public domain). English scripture: World English Bible (public domain). Scenes and artwork are original.</p>
-<h2>Account deletion & contact</h2>
-<p>To delete your account and all its data, remove a prayer post, or ask anything, write to <a href="mailto:289021604@qq.com">289021604@qq.com</a> (289021604@qq.com).</p>
-<a class="back" href="/">← Back to the sanctuary</a>
-</section>
+<div class="langs" id="langs"></div>
+<div id="doc"></div>
 </main>
 <script>
-(function(){var l;try{l=localStorage.getItem('sanct_lang');l=l&&JSON.parse(l);}catch(e){}if(l!=='zh'&&l!=='en')l=/^zh/i.test(navigator.language||'')?'zh':'en';
-function set(x){document.body.className=x;document.documentElement.lang=x==='zh'?'zh-CN':'en';document.title=x==='zh'?'隐私与使用说明 · 云上圣所':'Privacy & Terms · Sanctuary';}
-set(l);document.getElementById('sw').onclick=function(){l=l==='zh'?'en':'zh';try{localStorage.setItem('sanct_lang',JSON.stringify(l));}catch(e){}set(l);};})();
+(function(){
+var MAIL='<a href="mailto:289021604@qq.com">289021604@qq.com</a>';
+var NAMES={en:'English',fr:'Français',de:'Deutsch',it:'Italiano',es:'Español',zh:'中文'};
+var D={
+en:{t:'Privacy & Terms',sub:'Sanctuary · a church in the cloud · Updated November 2026',back:'← Back to the sanctuary',rep:'Report content / takedown request',s:[
+['What this is','<p>Sanctuary is a virtual church online, open at any time for quiet prayer. It uses forms of prayer, scripture reading and self-examination shared across Christian traditions. There are no fictional clergy here.</p>'],
+['The confessional is not a sacrament','<p>The confessional offers private, guided personal confession and prayers of repentance; the reflection room is a free short version. Neither is the Sacrament of Reconciliation or any church sacrament, and neither pronounces absolution. What you pay for is the guided content and experience, not forgiveness. If you need a sacrament, please contact a pastor or priest of your church.</p>'],
+['Accounts','<p>You can browse, pray and pray for others without an account. Lighting candles, the confessional, and starting or joining gatherings require an account. We store your email, display name, a one-way (bcrypt) hash of your password, simple counts (minutes prayed, candles, confessions, group prayers), your invitation code and who invited you (if anyone). You choose whether your name is shown in gatherings and in the sanctuary.</p>'],
+['What never leaves your device','<ul><li><b>Anything you write in the confessional or reflection room</b> — it lives only in the page’s memory, is never uploaded or saved, and is erased at the end.</li><li><b>Your voice when you “speak” a confession</b> — only the volume is measured on your device; nothing is recorded or uploaded.</li><li><b>Names you type when lighting a candle.</b></li><li>We only record that a confession was completed — never its content.</li></ul>'],
+['What is sent to our servers','<ul><li><b>Your position and posture in the sanctuary</b>, shared live with other visitors to show your presence (with your display name and an anonymous reference code if you allow your name to be shown, so that a name can be reported). Not stored.</li><li><b>Prayer wall posts</b>, published anonymously after human review. Do not include names, phone numbers or addresses.</li><li><b>Gathering topics</b> you create are shown publicly with your display name until the gathering ends.</li><li><b>Orders</b> for candles (€1 / $1) and confessions (€9.90 / $9.90).</li><li><b>Reports</b> you send: the reason, your description, and your email only if you give it.</li><li>To prevent abuse we store a one-way hash derived from your network address, never the raw IP address.</li></ul>'],
+['Invitations & sharing','<p>When you share a link while logged in, it contains your personal invitation code. We count how many times your link was opened (de-duplicated with the hash above) and how many people created an account with it. When someone signs up with your link, you both receive a free candle (up to 20 rewarded invitations for you). We never show you who your friends are or any of their data — only the numbers. Sharing itself happens through your own device or the service you choose (e.g. WhatsApp, e-mail); we only record which channel was used.</p>'],
+['Payments & refunds','<p>Payments are processed by Stripe (card, Apple Pay, Google Pay and other methods offered by Stripe). We never see or store your card details; Stripe’s privacy policy applies to the payment. Candles and confessions are one-time digital experiences, considered delivered once started. If you were charged but the feature did not work, write to us and we will refund you in full after checking.</p>'],
+['Community rules','<p>Please respect one another. Spam and ads, contact details, harassment, hate speech, sexual or violent content, scams, illegal content, and content that infringes copyright or someone’s privacy are not allowed.</p>'],
+['Reporting and takedown','<p>Anyone can report a prayer request, a gathering or a display name with the “Report” / ⚑ links, and anyone can send a general report or legal notice (copyright, privacy, illegal content) with the form below or by e-mail to '+MAIL+'. Every report is reviewed by a person. Content reported by three different people is hidden automatically until it is reviewed. Possible actions: removing the content, hiding a display name, or suspending an account (which also ends its gatherings). If you believe a decision about your content was wrong, write to us and we will look at it again.</p>'],
+['If you are in crisis','<p>If you are in crisis or thinking about harming yourself, please contact your local emergency services or a crisis line right away, or tell someone you trust.</p>'],
+['Scripture','<p>English: World English Bible. French: Louis Segond 1910. German: Luther 1912. Italian: Riveduta 1927. Spanish: Reina-Valera 1909. Chinese: Chinese Union Version 1919. All are in the public domain. The Lord’s Prayer in French, German, Italian and Spanish is given in its traditional liturgical wording. Scenes and artwork are original.</p>'],
+['Account deletion & contact','<p>To delete your account and all its data, remove a prayer post, or ask anything, write to '+MAIL+'.</p>']]},
+fr:{t:'Confidentialité et conditions',sub:'Sanctuary · une église dans le cloud · Mise à jour : novembre 2026',back:'← Retour au sanctuaire',rep:'Signaler un contenu / demande de retrait',s:[
+['De quoi s’agit-il','<p>Sanctuary est une église virtuelle en ligne, ouverte à tout moment pour la prière silencieuse. Elle propose des formes de prière, de lecture biblique et d’examen personnel communes aux traditions chrétiennes. Il n’y a ici aucun membre du clergé fictif.</p>'],
+['Le confessionnal n’est pas un sacrement','<p>Le confessionnal propose une confession personnelle guidée et privée ainsi que des prières de repentance ; la salle de recueillement en est une version courte et gratuite. Ni l’un ni l’autre n’est le sacrement de réconciliation ni un sacrement de l’Église, et aucune absolution n’est prononcée. Ce que vous payez, c’est le contenu guidé et l’expérience, pas le pardon. Pour un sacrement, adressez-vous à un pasteur ou à un prêtre de votre Église.</p>'],
+['Comptes','<p>Vous pouvez visiter, prier et prier pour les autres sans compte. Allumer un cierge, le confessionnal et les rassemblements nécessitent un compte. Nous conservons votre e-mail, votre nom affiché, une empreinte à sens unique (bcrypt) de votre mot de passe, des compteurs simples (minutes de prière, cierges, confessions, prières communes), votre code d’invitation et, le cas échéant, la personne qui vous a invité. Vous choisissez si votre nom est affiché.</p>'],
+['Ce qui ne quitte jamais votre appareil','<ul><li><b>Tout ce que vous écrivez au confessionnal ou en salle de recueillement</b> — uniquement en mémoire de la page, jamais envoyé ni enregistré, effacé à la fin.</li><li><b>Votre voix lorsque vous « dites » votre confession</b> — seul le volume est mesuré sur votre appareil ; rien n’est enregistré ni envoyé.</li><li><b>Les noms saisis en allumant un cierge.</b></li><li>Nous enregistrons seulement qu’une confession a été faite — jamais son contenu.</li></ul>'],
+['Ce qui est envoyé à nos serveurs','<ul><li><b>Votre position et votre posture dans le sanctuaire</b>, partagées en direct avec les autres visiteurs (avec votre nom affiché et un code de référence anonyme si vous l’autorisez, afin qu’un nom puisse être signalé). Non conservées.</li><li><b>Les messages du mur de prière</b>, publiés anonymement après vérification humaine.</li><li><b>Les sujets des rassemblements</b> que vous créez, affichés avec votre nom jusqu’à la fin du rassemblement.</li><li><b>Les commandes</b> de cierges (1 € / 1 $) et de confessions (9,90 € / 9,90 $).</li><li><b>Les signalements</b> envoyés : motif, description, et votre e-mail seulement si vous le donnez.</li><li>Pour prévenir les abus, nous conservons une empreinte à sens unique de votre adresse réseau, jamais l’adresse IP elle-même.</li></ul>'],
+['Invitations et partage','<p>Quand vous partagez un lien en étant connecté, il contient votre code d’invitation personnel. Nous comptons combien de fois il a été ouvert (dédoublonné grâce à l’empreinte ci-dessus) et combien de personnes ont créé un compte avec lui. Lorsqu’une personne s’inscrit avec votre lien, vous recevez chacun un cierge offert (jusqu’à 20 invitations récompensées pour vous). Nous ne vous montrons jamais qui sont vos amis ni leurs données — seulement des chiffres. Le partage passe par votre appareil ou le service choisi ; nous enregistrons seulement le canal utilisé.</p>'],
+['Paiements et remboursements','<p>Les paiements sont traités par Stripe (carte, Apple Pay, Google Pay et autres moyens proposés par Stripe). Nous ne voyons ni ne conservons vos données de carte ; la politique de confidentialité de Stripe s’applique au paiement. Les cierges et confessions sont des expériences numériques ponctuelles, considérées comme fournies dès leur début. Si vous avez été débité sans pouvoir utiliser la fonction, écrivez-nous : après vérification, nous vous rembourserons intégralement.</p>'],
+['Règles de la communauté','<p>Respectez-vous les uns les autres. Spam et publicité, coordonnées, harcèlement, discours de haine, contenus sexuels ou violents, arnaques, contenus illicites et contenus portant atteinte au droit d’auteur ou à la vie privée sont interdits.</p>'],
+['Signalement et retrait','<p>Chacun peut signaler une intention de prière, un rassemblement ou un nom affiché via les liens « Signaler » / ⚑, et envoyer un signalement général ou une notification légale (droit d’auteur, vie privée, contenu illicite) avec le formulaire ci-dessous ou par e-mail à '+MAIL+'. Chaque signalement est examiné par une personne. Un contenu signalé par trois personnes différentes est masqué automatiquement en attendant l’examen. Mesures possibles : retrait du contenu, masquage d’un nom affiché, suspension d’un compte. Si vous estimez qu’une décision concernant votre contenu est erronée, écrivez-nous.</p>'],
+['En cas de crise','<p>Si vous traversez une crise ou pensez à vous faire du mal, contactez immédiatement les services d’urgence ou une ligne d’écoute, ou parlez-en à une personne de confiance.</p>'],
+['Écriture sainte','<p>Français : Louis Segond 1910. Anglais : World English Bible. Allemand : Luther 1912. Italien : Riveduta 1927. Espagnol : Reina-Valera 1909. Chinois : Version de l’Union 1919. Toutes sont dans le domaine public. Le Notre Père est donné dans sa forme liturgique traditionnelle. Décors et illustrations originaux.</p>'],
+['Suppression du compte et contact','<p>Pour supprimer votre compte et toutes ses données, retirer un message ou poser une question, écrivez à '+MAIL+'.</p>']]},
+de:{t:'Datenschutz & Nutzungsbedingungen',sub:'Sanctuary · eine Kirche in der Cloud · Stand: November 2026',back:'← Zurück in die Kirche',rep:'Inhalt melden / Löschanfrage',s:[
+['Was ist das','<p>Sanctuary ist eine virtuelle Online-Kirche, jederzeit offen für stilles Gebet. Sie nutzt Formen des Gebets, der Bibellese und der Selbstprüfung, die christlichen Traditionen gemeinsam sind. Es gibt hier keine fiktiven Geistlichen.</p>'],
+['Der Beichtstuhl ist kein Sakrament','<p>Der Beichtstuhl bietet ein privates, geführtes persönliches Bekenntnis und Bußgebete; der Raum der Stille ist eine kostenlose Kurzfassung. Keines von beiden ist das Sakrament der Versöhnung oder ein anderes Sakrament der Kirche, und es wird keine Lossprechung erteilt. Bezahlt werden die geführten Inhalte und das Erlebnis, nicht die Vergebung. Wenn Sie ein Sakrament suchen, wenden Sie sich an eine Pfarrerin, einen Pfarrer oder Priester Ihrer Kirche.</p>'],
+['Konten','<p>Besuchen, beten und für andere beten geht ohne Konto. Kerzen, Beichtstuhl und Gebetstreffen erfordern ein Konto. Wir speichern Ihre E-Mail, Ihren Anzeigenamen, einen Einweg-Hash (bcrypt) Ihres Passworts, einfache Zähler (Gebetsminuten, Kerzen, Beichten, Gemeinschaftsgebete), Ihren Einladungscode und ggf. wer Sie eingeladen hat. Sie entscheiden, ob Ihr Name angezeigt wird.</p>'],
+['Was Ihr Gerät nie verlässt','<ul><li><b>Alles, was Sie im Beichtstuhl oder im Raum der Stille schreiben</b> – nur im Speicher der Seite, nie hochgeladen oder gespeichert, am Ende gelöscht.</li><li><b>Ihre Stimme, wenn Sie Ihr Bekenntnis „sprechen“</b> – nur die Lautstärke wird auf Ihrem Gerät gemessen; nichts wird aufgenommen oder hochgeladen.</li><li><b>Namen, die Sie beim Anzünden einer Kerze eingeben.</b></li><li>Wir speichern nur, dass eine Beichte abgeschlossen wurde – nie den Inhalt.</li></ul>'],
+['Was an unsere Server gesendet wird','<ul><li><b>Ihre Position und Haltung in der Kirche</b>, live mit anderen Besuchern geteilt (mit Anzeigenamen und einem anonymen Referenzcode, falls Sie Ihren Namen zeigen, damit ein Name gemeldet werden kann). Nicht gespeichert.</li><li><b>Beiträge auf der Gebetswand</b>, nach menschlicher Prüfung anonym veröffentlicht.</li><li><b>Themen von Gebetstreffen</b>, die Sie erstellen, werden bis zum Ende mit Ihrem Anzeigenamen gezeigt.</li><li><b>Bestellungen</b> von Kerzen (1 € / 1 $) und Beichten (9,90 € / 9,90 $).</li><li><b>Meldungen</b>, die Sie senden: Grund, Beschreibung und Ihre E-Mail nur, wenn Sie sie angeben.</li><li>Zum Schutz vor Missbrauch speichern wir einen Einweg-Hash Ihrer Netzwerkadresse, nie die IP-Adresse selbst.</li></ul>'],
+['Einladungen & Teilen','<p>Wenn Sie angemeldet einen Link teilen, enthält er Ihren persönlichen Einladungscode. Wir zählen, wie oft er geöffnet wurde (mit dem obigen Hash entdoppelt) und wie viele Personen damit ein Konto erstellt haben. Registriert sich jemand über Ihren Link, erhalten Sie beide eine geschenkte Kerze (für Sie bis zu 20 belohnte Einladungen). Wir zeigen Ihnen nie, wer Ihre Freunde sind, und keine ihrer Daten – nur Zahlen. Das Teilen geschieht über Ihr Gerät oder den gewählten Dienst; wir speichern nur den Kanal.</p>'],
+['Zahlungen & Erstattungen','<p>Zahlungen werden von Stripe abgewickelt (Karte, Apple Pay, Google Pay und weitere von Stripe angebotene Methoden). Wir sehen und speichern Ihre Kartendaten nie; für die Zahlung gilt die Datenschutzerklärung von Stripe. Kerzen und Beichten sind einmalige digitale Erlebnisse und gelten mit Beginn als erbracht. Wurden Sie belastet, ohne die Funktion nutzen zu können, schreiben Sie uns – nach Prüfung erstatten wir den vollen Betrag.</p>'],
+['Gemeinschaftsregeln','<p>Bitte begegnen Sie einander mit Respekt. Spam und Werbung, Kontaktdaten, Belästigung, Hassrede, sexuelle oder gewalttätige Inhalte, Betrug, rechtswidrige Inhalte sowie Verletzungen von Urheberrecht oder Privatsphäre sind nicht erlaubt.</p>'],
+['Melden und Entfernen','<p>Jede Person kann ein Gebetsanliegen, ein Gebetstreffen oder einen Anzeigenamen über „Melden“ / ⚑ melden und eine allgemeine Meldung oder einen rechtlichen Hinweis (Urheberrecht, Datenschutz, rechtswidrige Inhalte) über das Formular unten oder per E-Mail an '+MAIL+' senden. Jede Meldung wird von einem Menschen geprüft. Inhalte, die von drei verschiedenen Personen gemeldet werden, werden bis zur Prüfung automatisch ausgeblendet. Mögliche Maßnahmen: Entfernen des Inhalts, Ausblenden eines Anzeigenamens oder Sperren eines Kontos. Halten Sie eine Entscheidung über Ihre Inhalte für falsch, schreiben Sie uns.</p>'],
+['In einer Krise','<p>Wenn Sie in einer Krise sind oder daran denken, sich etwas anzutun, wenden Sie sich sofort an den Notruf oder die Telefonseelsorge (in Deutschland 0800 111 0 111) oder sprechen Sie mit einem Menschen Ihres Vertrauens.</p>'],
+['Bibeltexte','<p>Deutsch: Luther 1912. Englisch: World English Bible. Französisch: Louis Segond 1910. Italienisch: Riveduta 1927. Spanisch: Reina-Valera 1909. Chinesisch: Chinese Union Version 1919. Alle gemeinfrei. Das Vaterunser steht in der ökumenischen liturgischen Fassung. Szenen und Grafiken sind eigene Werke.</p>'],
+['Konto löschen & Kontakt','<p>Um Ihr Konto mit allen Daten zu löschen, einen Beitrag zu entfernen oder Fragen zu stellen, schreiben Sie an '+MAIL+'.</p>']]},
+it:{t:'Privacy e condizioni',sub:'Sanctuary · una chiesa nel cloud · Aggiornato a novembre 2026',back:'← Torna al santuario',rep:'Segnala un contenuto / richiesta di rimozione',s:[
+['Che cos’è','<p>Sanctuary è una chiesa virtuale online, aperta in ogni momento per la preghiera silenziosa. Propone forme di preghiera, lettura biblica ed esame personale comuni alle tradizioni cristiane. Qui non ci sono membri del clero fittizi.</p>'],
+['Il confessionale non è un sacramento','<p>Il confessionale offre una confessione personale guidata e privata e preghiere di pentimento; la sala del raccoglimento ne è una versione breve e gratuita. Nessuno dei due è il sacramento della riconciliazione o un sacramento della Chiesa, e non viene pronunciata alcuna assoluzione. Si paga il contenuto guidato e l’esperienza, non il perdono. Per un sacramento rivolgiti a un pastore o a un sacerdote della tua Chiesa.</p>'],
+['Account','<p>Puoi visitare, pregare e pregare per gli altri senza account. Candele, confessionale e incontri richiedono un account. Conserviamo la tua email, il nome visualizzato, un hash unidirezionale (bcrypt) della password, semplici contatori (minuti di preghiera, candele, confessioni, preghiere comuni), il tuo codice di invito ed eventualmente chi ti ha invitato. Scegli tu se mostrare il tuo nome.</p>'],
+['Ciò che non lascia mai il tuo dispositivo','<ul><li><b>Tutto ciò che scrivi nel confessionale o nella sala del raccoglimento</b> — solo nella memoria della pagina, mai inviato né salvato, cancellato alla fine.</li><li><b>La tua voce quando «dici» la confessione</b> — sul dispositivo viene misurato solo il volume; nulla viene registrato o inviato.</li><li><b>I nomi che scrivi accendendo una candela.</b></li><li>Registriamo solo che una confessione è stata completata — mai il contenuto.</li></ul>'],
+['Ciò che viene inviato ai nostri server','<ul><li><b>La tua posizione e postura nel santuario</b>, condivise in tempo reale con gli altri visitatori (con il nome visualizzato e un codice di riferimento anonimo se scegli di mostrarlo, così che un nome possa essere segnalato). Non conservate.</li><li><b>I messaggi del muro della preghiera</b>, pubblicati in forma anonima dopo verifica umana.</li><li><b>I temi degli incontri</b> che crei, mostrati con il tuo nome fino al termine.</li><li><b>Gli ordini</b> di candele (1 € / 1 $) e confessioni (9,90 € / 9,90 $).</li><li><b>Le segnalazioni</b> che invii: motivo, descrizione e la tua email solo se la fornisci.</li><li>Per prevenire abusi conserviamo un hash unidirezionale del tuo indirizzo di rete, mai l’indirizzo IP.</li></ul>'],
+['Inviti e condivisione','<p>Quando condividi un link da utente connesso, contiene il tuo codice di invito personale. Contiamo quante volte è stato aperto (senza duplicati grazie all’hash sopra) e quante persone hanno creato un account con esso. Quando qualcuno si iscrive con il tuo link, ricevete entrambi una candela in regalo (fino a 20 inviti premiati per te). Non ti mostriamo mai chi sono i tuoi amici né i loro dati — solo numeri. La condivisione avviene tramite il tuo dispositivo o il servizio scelto; registriamo solo il canale.</p>'],
+['Pagamenti e rimborsi','<p>I pagamenti sono gestiti da Stripe (carta, Apple Pay, Google Pay e altri metodi offerti da Stripe). Non vediamo né conserviamo i dati della tua carta; al pagamento si applica l’informativa privacy di Stripe. Candele e confessioni sono esperienze digitali una tantum, considerate fornite al loro inizio. Se ti è stato addebitato un importo senza poter usare la funzione, scrivici: dopo una verifica ti rimborseremo per intero.</p>'],
+['Regole della comunità','<p>Rispettatevi a vicenda. Non sono ammessi spam e pubblicità, contatti, molestie, incitamento all’odio, contenuti sessuali o violenti, truffe, contenuti illeciti e violazioni del diritto d’autore o della privacy.</p>'],
+['Segnalazioni e rimozione','<p>Chiunque può segnalare un’intenzione di preghiera, un incontro o un nome visualizzato con i link «Segnala» / ⚑, e inviare una segnalazione generale o una notifica legale (diritto d’autore, privacy, contenuti illeciti) con il modulo qui sotto o via email a '+MAIL+'. Ogni segnalazione è esaminata da una persona. I contenuti segnalati da tre persone diverse vengono nascosti automaticamente in attesa della verifica. Azioni possibili: rimozione del contenuto, oscuramento di un nome, sospensione di un account. Se ritieni errata una decisione sui tuoi contenuti, scrivici.</p>'],
+['In caso di crisi','<p>Se stai vivendo una crisi o pensi di farti del male, contatta subito i servizi di emergenza o una linea di ascolto, oppure parlane con una persona di fiducia.</p>'],
+['Scrittura','<p>Italiano: Riveduta 1927. Inglese: World English Bible. Francese: Louis Segond 1910. Tedesco: Luther 1912. Spagnolo: Reina-Valera 1909. Cinese: Chinese Union Version 1919. Tutte di pubblico dominio. Il Padre nostro è riportato nella forma liturgica tradizionale. Scene e grafica originali.</p>'],
+['Eliminazione dell’account e contatti','<p>Per eliminare il tuo account e tutti i dati, rimuovere un messaggio o fare domande, scrivi a '+MAIL+'.</p>']]},
+es:{t:'Privacidad y condiciones',sub:'Sanctuary · una iglesia en la nube · Actualizado en noviembre de 2026',back:'← Volver al santuario',rep:'Denunciar contenido / solicitud de retirada',s:[
+['Qué es esto','<p>Sanctuary es una iglesia virtual en línea, abierta en todo momento para la oración en silencio. Ofrece formas de oración, lectura bíblica y examen personal comunes a las tradiciones cristianas. Aquí no hay clérigos ficticios.</p>'],
+['El confesionario no es un sacramento','<p>El confesionario ofrece una confesión personal guiada y privada y oraciones de arrepentimiento; la sala de recogimiento es una versión breve y gratuita. Ninguno de los dos es el sacramento de la reconciliación ni un sacramento de la Iglesia, y no se pronuncia ninguna absolución. Lo que pagas es el contenido guiado y la experiencia, no el perdón. Si necesitas un sacramento, acude a un pastor o a un sacerdote de tu iglesia.</p>'],
+['Cuentas','<p>Puedes visitar, orar y orar por otros sin cuenta. Encender velas, el confesionario y los encuentros requieren una cuenta. Guardamos tu correo, tu nombre visible, un hash unidireccional (bcrypt) de tu contraseña, contadores sencillos (minutos de oración, velas, confesiones, oraciones comunes), tu código de invitación y, en su caso, quién te invitó. Tú decides si se muestra tu nombre.</p>'],
+['Lo que nunca sale de tu dispositivo','<ul><li><b>Todo lo que escribes en el confesionario o en la sala de recogimiento</b> — solo en la memoria de la página, nunca se envía ni se guarda, y se borra al final.</li><li><b>Tu voz cuando «dices» tu confesión</b> — en tu dispositivo solo se mide el volumen; no se graba ni se envía nada.</li><li><b>Los nombres que escribes al encender una vela.</b></li><li>Solo registramos que se completó una confesión — nunca su contenido.</li></ul>'],
+['Lo que se envía a nuestros servidores','<ul><li><b>Tu posición y postura en el santuario</b>, compartidas en directo con otros visitantes (con tu nombre visible y un código de referencia anónimo si decides mostrarlo, para que un nombre pueda denunciarse). No se guardan.</li><li><b>Los mensajes del muro de oración</b>, publicados de forma anónima tras revisión humana.</li><li><b>Los temas de los encuentros</b> que creas, mostrados con tu nombre hasta que terminan.</li><li><b>Los pedidos</b> de velas (1 € / 1 $) y confesiones (9,90 € / 9,90 $).</li><li><b>Las denuncias</b> que envías: motivo, descripción y tu correo solo si lo das.</li><li>Para evitar abusos guardamos un hash unidireccional de tu dirección de red, nunca la dirección IP.</li></ul>'],
+['Invitaciones y compartir','<p>Cuando compartes un enlace con la sesión iniciada, incluye tu código de invitación personal. Contamos cuántas veces se abrió (sin duplicados gracias al hash anterior) y cuántas personas crearon una cuenta con él. Cuando alguien se registra con tu enlace, ambos recibís una vela de regalo (hasta 20 invitaciones premiadas para ti). Nunca te mostramos quiénes son tus amigos ni sus datos — solo cifras. Compartir se hace desde tu dispositivo o el servicio que elijas; solo registramos el canal.</p>'],
+['Pagos y reembolsos','<p>Los pagos los procesa Stripe (tarjeta, Apple Pay, Google Pay y otros métodos que ofrece Stripe). Nunca vemos ni guardamos los datos de tu tarjeta; al pago se aplica la política de privacidad de Stripe. Las velas y confesiones son experiencias digitales puntuales y se consideran prestadas al comenzar. Si se te cobró y la función no funcionó, escríbenos y, tras comprobarlo, te devolveremos el importe íntegro.</p>'],
+['Normas de la comunidad','<p>Respetaos unos a otros. No se permite spam ni publicidad, datos de contacto, acoso, discurso de odio, contenido sexual o violento, estafas, contenido ilegal ni contenido que infrinja derechos de autor o la privacidad.</p>'],
+['Denuncias y retirada','<p>Cualquiera puede denunciar una petición de oración, un encuentro o un nombre visible con los enlaces «Denunciar» / ⚑, y enviar una denuncia general o un aviso legal (derechos de autor, privacidad, contenido ilegal) con el formulario de abajo o por correo a '+MAIL+'. Cada denuncia la revisa una persona. El contenido denunciado por tres personas distintas se oculta automáticamente hasta su revisión. Medidas posibles: retirar el contenido, ocultar un nombre o suspender una cuenta. Si crees que una decisión sobre tu contenido es errónea, escríbenos.</p>'],
+['Si estás en crisis','<p>Si estás en crisis o piensas en hacerte daño, contacta de inmediato con los servicios de emergencia o una línea de ayuda, o habla con alguien de confianza.</p>'],
+['Escritura','<p>Español: Reina-Valera 1909. Inglés: World English Bible. Francés: Louis Segond 1910. Alemán: Luther 1912. Italiano: Riveduta 1927. Chino: Chinese Union Version 1919. Todas son de dominio público. El Padre nuestro se ofrece en su forma litúrgica tradicional. Escenarios e ilustraciones originales.</p>'],
+['Eliminar la cuenta y contacto','<p>Para eliminar tu cuenta y todos sus datos, retirar un mensaje o preguntar cualquier cosa, escribe a '+MAIL+'.</p>']]},
+zh:{t:'隐私与使用说明',sub:'云上圣所 · Sanctuary · 更新于 2026 年 11 月',back:'← 回到圣所',rep:'举报内容 / 下架申请',s:[
+['这是什么','<p>云上圣所是一座线上的虚拟教堂，供人随时进入、安静祷告。它采用跨教派适用的祷告、读经与个人省察方式。这里没有虚构的圣职人员。</p>'],
+['忏悔室与省察室不是圣事','<p>忏悔室提供私密的、引导式的个人认罪与悔改祷告；省察室是免费的简短版本。二者都<b>不是</b>告解圣事或任何教会的圣礼，也<b>不宣告赦罪</b>。付费购买的是引导内容与体验，不是赦免。如有需要，请联系你所在教会的牧者或神父。</p>'],
+['账号','<p>浏览、祷告、为他人祷告不需要账号。点蜡烛、进入忏悔室、发起或加入祷告会需要注册。我们保存：邮箱、显示名称、经不可逆加密（bcrypt）处理的密码、简单统计（祷告分钟、蜡烛、忏悔、集体祷告次数）、你的邀请码，以及邀请你的人（如有）。你可以选择是否显示名字。</p>'],
+['哪些内容不会离开你的设备','<ul><li><b>忏悔室和省察室里写下的文字</b>：只存在于当前页面内存，不上传、不保存，结束时销毁。</li><li><b>「开口说」时的声音</b>：只在本机计算音量，不录音、不上传。</li><li><b>点蜡烛时填写的名字。</b></li><li>我们只记录「完成了一次忏悔」，不记录任何内容。</li></ul>'],
+['哪些内容会发送到服务器','<ul><li><b>你在圣所里的位置与姿态</b>：实时发给同时在线的访客（如你选择显示名字，会附上名字和一个匿名编号，以便名字可被举报）。不保存。</li><li><b>代祷墙内容</b>：经人工审核后匿名公开。</li><li><b>祷告会主题</b>：连同你的显示名称公开展示，直到祷告会结束。</li><li><b>订单</b>：蜡烛（1 欧元 / 1 美元）和忏悔（9.90 欧元 / 9.90 美元）。</li><li><b>你提交的举报</b>：原因、描述，以及你主动填写的邮箱。</li><li>为防止滥用，服务器保存由网络地址生成的不可逆哈希值，不保存原始 IP。</li></ul>'],
+['邀请与分享','<p>登录后分享的链接带有你的专属邀请码。我们统计链接被打开的次数（用上述哈希去重）以及通过它注册的人数。有人通过你的链接注册后，你们各得一支免费蜡烛（你最多获得 20 次奖励）。我们不会向你展示朋友是谁或其任何数据，只显示数字。分享本身通过你的设备或你选择的应用完成，我们只记录使用了哪个渠道。</p>'],
+['付款与退款','<p>付款由 Stripe 处理（银行卡、Apple Pay、Google Pay 及 Stripe 提供的其他方式）。我们不会看到或保存你的卡号，付款适用 Stripe 的隐私政策。蜡烛和忏悔为一次性数字体验，开始使用即视为已提供；若扣款后功能无法使用，请写信给我们，核实后全额退款。</p>'],
+['社区规则','<p>请彼此尊重。禁止垃圾信息和广告、联系方式、骚扰、仇恨言论、色情或暴力内容、诈骗、违法内容，以及侵犯版权或他人隐私的内容。</p>'],
+['举报与下架','<p>任何人都可以通过「举报」/ ⚑ 举报代祷事项、祷告会或用户名，也可以通过下方表单或发邮件至 '+MAIL+' 提交通用投诉或法律通知（版权、隐私、违法内容）。每条举报都由人工审核。被三位不同访客举报的内容会自动隐藏，等待审核。可能的处理：下架内容、隐藏用户名、停用账号。如你认为对你内容的处理有误，请写信给我们复核。</p>'],
+['危机求助','<p>如果你正处在危机中，或有伤害自己的念头，请立即联系当地紧急服务或心理援助热线，也可以告诉一位你信任的人。</p>'],
+['经文','<p>中文：和合本（1919）；英文：World English Bible；法文：Louis Segond 1910；德文：Luther 1912；意大利文：Riveduta 1927；西班牙文：Reina-Valera 1909。均为公有领域。法、德、意、西语的主祷文采用传统礼仪文本。场景与美术均为原创。</p>'],
+['删除账号与联系','<p>如需删除账号及全部数据、删除代祷内容，或有任何问题，请写信至 '+MAIL+'。</p>']]}
+};
+var L=['en','fr','de','it','es','zh'],l=null;
+try{l=JSON.parse(localStorage.getItem('sanct_lang')||'null');}catch(e){}
+if(L.indexOf(l)<0){l=null;var n=navigator.languages||[navigator.language||'en'];for(var i=0;i<n.length&&!l;i++){var c=String(n[i]).slice(0,2).toLowerCase();if(L.indexOf(c)>=0&&c!=='zh')l=c;}l=l||'en';}
+function render(){var d=D[l];document.documentElement.lang=l==='zh'?'zh-CN':l;document.title=d.t+' · Sanctuary';
+ document.getElementById('langs').innerHTML=L.map(function(x){return '<button data-l="'+x+'" class="'+(x===l?'on':'')+'">'+NAMES[x]+'</button>';}).join('');
+ var h='<h1>'+d.t+'</h1><div class="sub">'+d.sub+'</div>';d.s.forEach(function(s){h+='<h2>'+s[0]+'</h2>'+s[1];});
+ h+='<p><a class="cta" href="/?report=1">⚑ '+d.rep+'</a><a class="back" href="/">'+d.back+'</a></p>';
+ document.getElementById('doc').innerHTML=h;
+ Array.prototype.forEach.call(document.querySelectorAll('[data-l]'),function(b){b.onclick=function(){l=b.getAttribute('data-l');try{localStorage.setItem('sanct_lang',JSON.stringify(l));}catch(e){}render();};});}
+render();})();
 </script>
 </body>
 </html>
