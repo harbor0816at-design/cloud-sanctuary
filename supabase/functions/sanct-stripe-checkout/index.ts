@@ -37,6 +37,9 @@ Deno.serve(async (req) => {
     f.set("line_items[0][price_data][currency]", o.currency);
     f.set("line_items[0][price_data][unit_amount]", String(o.amount_cents));
     f.set("line_items[0][price_data][product_data][name]", (NAMES[o.kind] || NAMES.candle)[lc]);
+    // Digital, electronically supplied service; price is tax-inclusive so the buyer pays exactly €1 / €9.90.
+    f.set("line_items[0][price_data][product_data][tax_code]", "txcd_10000000");
+    f.set("line_items[0][price_data][tax_behavior]", "inclusive");
     f.set("expires_at", String(Math.floor(Date.now() / 1000) + 60 * 60));
     const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
