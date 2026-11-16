@@ -1,6 +1,6 @@
 // Called when the buyer returns from Stripe: retrieves the Checkout Session and marks the order paid
 // (amount, currency and order id are verified server-side). The webhook does the same independently.
-const SK = Deno.env.get("SANCTUARY_STRIPE_SECRET_KEY") || Deno.env.get("STRIPE_SECRET_KEY");
+const SK = Deno.env.get("SANCTUARY_STRIPE_SECRET_KEY");
 const SB = Deno.env.get("SUPABASE_URL")!, SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });

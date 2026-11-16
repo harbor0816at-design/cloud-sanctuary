@@ -1,8 +1,8 @@
 // Creates a Stripe Checkout Session for a pending Sanctuary order and returns its hosted payment URL.
 // Secrets: SANCTUARY_STRIPE_SECRET_KEY = key of the Sanctuary (Fidova Technology) Stripe account.
 // Each project in this Supabase project has its own Stripe account, so each uses its own secret name.
-// STRIPE_SECRET_KEY is only a legacy fallback. Optional ALLOWED_ORIGINS (comma separated).
-const SK = Deno.env.get("SANCTUARY_STRIPE_SECRET_KEY") || Deno.env.get("STRIPE_SECRET_KEY");
+// It never falls back to STRIPE_SECRET_KEY (that key belongs to another project). Optional ALLOWED_ORIGINS (comma separated).
+const SK = Deno.env.get("SANCTUARY_STRIPE_SECRET_KEY");
 const SB = Deno.env.get("SUPABASE_URL")!, SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 // Primary domain first: it is the fallback return URL for unknown origins.
 const BUILTIN = ["https://cloudsanctuary.app", "https://www.cloudsanctuary.app", "https://cloud-sanctuary.vercel.app"];

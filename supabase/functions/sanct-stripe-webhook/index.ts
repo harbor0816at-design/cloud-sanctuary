@@ -1,6 +1,6 @@
 // Stripe webhook (deploy with verify_jwt = false). Verifies the Stripe-Signature header with
-// SANCTUARY_STRIPE_WEBHOOK_SECRET (fallback STRIPE_WEBHOOK_SECRET) and marks orders paid on checkout.session.completed / async_payment_succeeded.
-const WH = Deno.env.get("SANCTUARY_STRIPE_WEBHOOK_SECRET") || Deno.env.get("STRIPE_WEBHOOK_SECRET");
+// SANCTUARY_STRIPE_WEBHOOK_SECRET and marks orders paid on checkout.session.completed / async_payment_succeeded.
+const WH = Deno.env.get("SANCTUARY_STRIPE_WEBHOOK_SECRET");
 const SB = Deno.env.get("SUPABASE_URL")!, SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 async function rpc(fn: string, args: Record<string, unknown>) {
   const r = await fetch(`${SB}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: SR, Authorization: `Bearer ${SR}`, "Content-Type": "application/json" }, body: JSON.stringify(args) });
