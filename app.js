@@ -33,6 +33,7 @@ const myId=(()=>{let id=null;try{id=sessionStorage.getItem('sanct_id');}catch(e)
 
 /* ---------- account state ---------- */
 let token=store.get('tok',null),me=null,payOn=false;
+const OT=(n,p)=>{try{if(window.OpsTrack)window.OpsTrack.track(n,p);}catch(_){}};
 function myName(){return me&&me.show_name?me.name:null;}
 function myPub(){return me&&me.show_name?me.pub_id:null;}
 function setAcctBtn(){const b=$('#acctbtn');b.textContent=me?(me.name||'?').slice(0,1).toUpperCase():'👤';b.classList.toggle('in',!!me);}
@@ -431,7 +432,7 @@ function amenHTML(){return`<div class="verse">${t('amen')}</div><div class="p" s
 function peopleHTML(names,anon){if(!names.length&&!anon)return'';const rep=names.some(p=>p.u);return`<div class="people"><div class="ref" style="margin:8px 0 6px">${t('roomWith')}</div>${names.map(p=>p.u?`<span class="chip rep" data-ru="${esc(p.u)}" data-rn="${esc(p.n)}" title="${esc(t('reportUser'))}">${esc(p.n)} <i>⚑</i></span>`:`<span class="chip">${esc(p.n)}</span>`).join('')}${anon?`<span class="chip dim">${t('roomAnon',{n:anon})}</span>`:''}${rep?`<div class="note" style="margin-top:4px">${t('reportUserP')}</div>`:''}</div>`;}
 $('#sheetBody').addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('[data-ru]');if(!c)return;e.preventDefault();openReport({type:'user',id:c.dataset.ru,label:c.dataset.rn});});
 
-function openPrayer(tab,autoMin){tab=tab||'quiet';const v=VERSES[verseIdx];
+function openPrayer(tab,autoMin){OT('open_prayer',{tab:tab||'quiet'});tab=tab||'quiet';const v=VERSES[verseIdx];
  const body=`<div class="tabs"><button data-t="quiet">${t('tQuiet')}</button><button data-t="lord">${t('tLord')}</button><button data-t="medi">${t('tMedi')}</button></div><div id="pt"></div>
  <div class="note">${t('prayNote')}${P.mode==='locked'?t('prayNoteSeat'):''}</div>`;
  openSheet(t('prayT'),body,root=>{let stop=null;const pt=root.querySelector('#pt');
@@ -449,12 +450,12 @@ function openPrayer(tab,autoMin){tab=tab||'quiet';const v=VERSES[verseIdx];
    else{pt.innerHTML=`${verseHTML(v)}<ul class="q"><li>${t('mediRead')}</li><li>${t('mediThink')}</li><li>${t('mediAsk')}</li><li>${t('mediRest')}</li></ul>`;}}
   root.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.t));show(tab);return()=>{if(stop)stop();};});}
 
-function openVerse(){const draw=root=>{root.querySelector('#vv').innerHTML=verseHTML(VERSES[verseIdx]);};
+function openVerse(){OT('open_verse');const draw=root=>{root.querySelector('#vv').innerHTML=verseHTML(VERSES[verseIdx]);};
  openSheet(t('verseT'),`<div id="vv"></div><div class="p">${t('verseP')}</div><div class="row"><button class="btn" id="nx">${t('nextV')}</button><button class="btn pri" id="pr">${t('prayV')}</button></div>`,root=>{draw(root);root.querySelector('#nx').onclick=()=>{verseIdx=(verseIdx+1)%VERSES.length;draw(root);};root.querySelector('#pr').onclick=()=>openPrayer('medi');});}
 
 /* ---------- accounts ---------- */
 function requireLogin(after){if(me){after();return;}openAccount(t('needLogin'),after);}
-function openAccount(reason,after){if(me){openProfile();return;}let mode='login',email='';
+function openAccount(reason,after){OT('account_open',{reason:String(reason||'')});if(me){openProfile();return;}let mode='login',email='';
  const render=root=>{root.innerHTML=`${reason?`<div class="p" style="margin-bottom:8px">${reason}</div>`:''}<div class="tabs"><button data-m="login" class="${mode==='login'?'on':''}">${t('login')}</button><button data-m="register" class="${mode==='register'?'on':''}">${t('register')}</button></div>
   <input class="field" id="ae" type="email" autocomplete="email" placeholder="${t('email')}" value="${esc(email)}">
   ${mode==='register'?`<input class="field" id="an" maxlength="24" placeholder="${t('dname')}" style="margin-top:8px">`:''}
@@ -501,7 +502,7 @@ function share(o){const url=shareUrl(o.params),text=o.text||t('shSite'),kind=o.k
    root.querySelectorAll('[data-ch]').forEach(a=>a.onclick=()=>track('share',['whatsapp','telegram','x','facebook','email'][+a.dataset.ch],kind));
    const m=root.querySelector('#shm');if(m)m.onclick=()=>navigator.share({title:'Sanctuary',text,url}).then(()=>track('share','native',kind)).catch(()=>{});});};
  if(navigator.share&&isTouch){navigator.share({title:'Sanctuary',text,url}).then(()=>track('share','native',kind)).catch(e=>{if(!e||e.name!=='AbortError')open();});}else open();}
-function openInvite(){
+function openInvite(){OT('invite_open');
  if(!me){modal(t('invT'),`<div class="p">${t('invP')}</div><div class="p" style="margin-top:8px">${t('invLogin')}</div><div class="row"><button class="btn pri" id="ivr">${t('register')}</button><button class="btn" id="ivs">${t('invShareAnyway')}</button></div>`,root=>{
   root.querySelector('#ivr').onclick=()=>{closeModal();openAccount(null,()=>openInvite());};root.querySelector('#ivs').onclick=()=>{closeModal();share({kind:'invite'});};});return;}
  const url=shareUrl({});
@@ -525,7 +526,7 @@ function openReport(o){const type=o.type||'other';let reason=type==='other'?'cop
    closeModal();toast(r.dup?t('rpDup'):t('rpThanks'));if(o.done)o.done();};});}
 
 /* ---------- payments (Stripe Checkout; beta-free while payments are switched off) ---------- */
-async function buy(kind){if(!sb){toast(t('aErr_offline'));return null;}let r;
+async function buy(kind){OT('checkout_click',{plan:kind});if(!sb){toast(t('aErr_offline'));return null;}let r;
  try{r=await rpc('sanct_create_order',{p_token:token,p_kind:kind,p_currency:CUR});}catch(_){toast(t('aErr_offline'));return null;}
  if(!r||r.error){if(r&&r.error==='auth'){logoutLocal();openAccount(t('needLogin'));}else toast(t('aErr_'+((r&&r.error)||'offline')));return null;}
  if(r.status==='beta_free')return r.id;
@@ -543,7 +544,7 @@ async function checkReturn(){const q=new URLSearchParams(location.search);const 
 function priceNote(){return payOn?t('payNote'):t('betaFree');}
 
 /* ---------- candles ---------- */
-function openCandle(){
+function openCandle(){OT('candle_open');OT('pricing_view',{plan:'candle'});
  openSheet(t('candleT'),`<div class="p">${t('candleP')}</div>
  <input class="field" id="cn" maxlength="40" placeholder="${t('candleFor')}" style="margin-top:12px">
  <div class="row">${me&&me.candle_credits>0?`<button class="btn pri" id="cfree">${t('credit',{n:me.candle_credits})}</button>`:''}<button class="btn ${me&&me.candle_credits>0?'':'pri'}" id="cl">${t('lightFor',{p:price(PRICE.candle)})}</button></div>
@@ -561,7 +562,7 @@ function lightDone(r,name){
   r2.querySelector('#q1').onclick=()=>{r2.innerHTML=`${breathHTML(1)}<div class="row"><button class="btn" id="x1">${t('end')}</button></div>`;const stop=timerUI(r2,1,()=>{r2.innerHTML=`<div class="verse">${t('amen')}</div><div class="row"><button class="btn" id="x2">${t('close')}</button></div>`;r2.querySelector('#x2').onclick=closeSheet;});r2.querySelector('#x1').onclick=()=>closeSheet();sheetCleanup=stop;};});}
 
 /* ---------- free reflection room ---------- */
-function openReflect(){let step=0,stop=null,draft='';const N=5;
+function openReflect(){OT('open_reflect');let step=0,stop=null,draft='';const N=5;
  const render=root=>{if(stop){stop();stop=null;}const dots=`<div class="steps">${Array.from({length:N},(_,i)=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div>`;const nav=`<div class="row"><button class="btn" data-b>${t('back')}</button><button class="btn pri" data-n>${t('cont')}</button></div>`;let h='';
   if(step===0)h=`${dots}<div class="p" style="text-align:center">${t('rf0')}</div>${verseHTML(SCR.search)}${breathHTML(.5)}<div class="row"><button class="btn pri" data-n>${t('cont')}</button></div>`;
   else if(step===1)h=`${dots}<div class="p">${t('rf1')}</div><ul class="q"><li>${t('rfq1')}</li><li>${t('rfq2')}</li><li>${t('rfq3')}</li><li>${t('rfq4')}</li></ul>${nav}`;
@@ -578,7 +579,7 @@ function openReflect(){let step=0,stop=null,draft='';const N=5;
  openSheet(t('reflectT'),'<div id="rf"></div>',root=>{render(root.querySelector('#rf'));return()=>{if(stop)stop();draft='';};});}
 
 /* ---------- confessional (guided, paid) ---------- */
-function openConfessIntro(){
+function openConfessIntro(){OT('confession_start');OT('pricing_view',{plan:'confession'});
  openSheet(t('cfT'),`<div class="p">${t('cfIntro')}</div><ul class="q">${['cfInc1','cfInc2','cfInc3','cfInc4','cfInc5'].map(k=>`<li>${t(k)}</li>`).join('')}</ul>
   <div class="row"><button class="btn pri" id="cfgo">${t('cfBuy',{p:price(PRICE.confession)})}</button></div>
   <div class="note">${priceNote()}<br>${t('cfPrivacy')}<br><br>${t('notSacrament')}</div>`,root=>{
@@ -634,7 +635,7 @@ function peaceCard(pen){const W=1080,H=1350,[c,g]=mkC(W,H);const gr=g.createRadi
  try{const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='peace-card.png';document.body.appendChild(a);a.click();a.remove();}catch(_){}}
 
 /* ---------- prayer wall ---------- */
-function openWall(focus){const mine=store.get('wall2',[]);const prayed=store.get('prayed2',{});const reported=store.get('reported',{});let items=[],state=sb?'loading':'offline';
+function openWall(focus){OT('open_wall');const mine=store.get('wall2',[]);const prayed=store.get('prayed2',{});const reported=store.get('reported',{});let items=[],state=sb?'loading':'offline';
  const draw=root=>{const box=root.querySelector('#cards');let h='';
   mine.forEach(c=>{h+=`<div class="card"><div class="t">${esc(c.t)}</div><div class="m"><span>${t('yourReq')}<span class="tag">${t('reviewing')}</span></span><span>${new Date(c.at).toLocaleDateString(LOCALE)}</span></div></div>`;});
   if(state==='loading')h+=`<div class="p" style="text-align:center;padding:14px">${t('wallLoading')}</div>`;
@@ -657,7 +658,7 @@ function openWall(focus){const mine=store.get('wall2',[]);const prayed=store.get
    toast(DICT['eRes_'+r]?t('eRes_'+r):t('eRes_fail'));if(r==='pending'){mine.unshift({t:v,at:Date.now()});mine.splice(10);store.set('wall2',mine);ta.value='';draw(root);}};});}
 
 /* ---------- gatherings sheet ---------- */
-function openGroup(){let rooms=[],iv=null,startIn=0,dur=10;
+function openGroup(){OT('open_group');let rooms=[],iv=null,startIn=0,dur=10;
  const drawPublic=root=>{const g=groupInfo();root.querySelector('#gpub').innerHTML=g.live?`<div class="verse">${t('gLiveLeft',{t:mmss(g.left)})}</div><div class="ref">${t('gNow',{n:prayingCount()})}</div><div class="row"><button class="btn pri" id="gj">${t('gJoin')}</button></div>`
    :`<div class="verse">${t('gStartsIn',{t:mmss(g.until)})}</div><div class="p" style="text-align:center">${t('gBellNote')}</div><div class="row"><button class="btn" id="ginv">📤 ${t('shGroupBtn')}</button></div>`;const j=root.querySelector('#gj');if(j)j.onclick=()=>joinPublic();const gi=root.querySelector('#ginv');if(gi)gi.onclick=()=>share({kind:'group',text:t('shGroup'),params:{go:'group'}});};
  const drawRooms=root=>{const now=Date.now();const el=root.querySelector('#grooms');if(!sb){el.innerHTML='';return;}
@@ -704,7 +705,7 @@ function goDo(kind){
 document.querySelectorAll('#dock [data-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();goDo(b.dataset.go);});
 function langRow(){return`<div class="row langs" style="justify-content:flex-start">${LANGS.map(l=>`<button class="btn ${l===LANG?'pri':''}" data-lang="${l}">${({en:'English',fr:'Français',de:'Deutsch',it:'Italiano',es:'Español',zh:'中文'})[l]}</button>`).join('')}</div>`;}
 function bindLang(root){root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{const l=b.dataset.lang;if(l===LANG)return;store.set('lang',l);location.href='/'+(l==='en'?'':l+'/')+location.search;});}
-function openMenu(){openSheet(t('menuT'),`<div class="sec" style="margin-top:4px;border:none;padding-top:0">${t('goT')}</div><div class="tele">${PLACES.map((p,i)=>`<button class="btn" data-i="${i}">${t(p[0])}<small>${t(p[0]+'S')}</small></button>`).join('')}</div>
+function openMenu(){OT('open_menu');openSheet(t('menuT'),`<div class="sec" style="margin-top:4px;border:none;padding-top:0">${t('goT')}</div><div class="tele">${PLACES.map((p,i)=>`<button class="btn" data-i="${i}">${t(p[0])}<small>${t(p[0]+'S')}</small></button>`).join('')}</div>
  <div class="row" style="justify-content:flex-start"><button class="btn pri" id="minv">🎁 ${t('mInvite')}</button><button class="btn" id="mverse">📖 ${t('verseT')}</button><button class="btn" id="mmusic">♪ ${t('mMusic')} · ${audioOn?t('mOn'):t('mOff')}</button></div>
  <div class="sec">🌐 ${t('langT')}</div>${langRow()}
  <div class="note"><a href="/privacy.html" style="color:#bfa77c">${t('privacy')}</a> · <a href="#" id="mrep" style="color:#bfa77c">${t('mReport')}</a><br>${t('goTip')}</div>`,root=>{
