@@ -1,8 +1,12 @@
 // Creates a Stripe Checkout Session for a pending Sanctuary order and returns its hosted payment URL.
-// Secrets: STRIPE_SECRET_KEY (sk_test_… or sk_live_…), optional ALLOWED_ORIGINS (comma separated).
-const SK = Deno.env.get("STRIPE_SECRET_KEY");
+// Secrets: SANCTUARY_STRIPE_SECRET_KEY = key of the Sanctuary (Fidova Technology) Stripe account.
+// Each project in this Supabase project has its own Stripe account, so each uses its own secret name.
+// STRIPE_SECRET_KEY is only a legacy fallback. Optional ALLOWED_ORIGINS (comma separated).
+const SK = Deno.env.get("SANCTUARY_STRIPE_SECRET_KEY") || Deno.env.get("STRIPE_SECRET_KEY");
 const SB = Deno.env.get("SUPABASE_URL")!, SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "https://cloud-sanctuary.vercel.app").split(",").map((s) => s.trim()).filter(Boolean);
+// Primary domain first: it is the fallback return URL for unknown origins.
+const BUILTIN = ["https://cloudsanctuary.app", "https://www.cloudsanctuary.app", "https://cloud-sanctuary.vercel.app"];
+const ORIGINS = [...BUILTIN, ...(Deno.env.get("ALLOWED_ORIGINS") || "").split(",").map((s) => s.trim()).filter(Boolean)];
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 async function rpc(fn: string, args: Record<string, unknown>) {
@@ -32,6 +36,8 @@ Deno.serve(async (req) => {
     f.set("client_reference_id", o.id);
     f.set("metadata[order_id]", o.id);
     f.set("payment_intent_data[metadata][order_id]", o.id);
+    f.set("metadata[project]", "sanctuary");
+    f.set("payment_intent_data[metadata][project]", "sanctuary");
     f.set("locale", lc === "zh" ? "zh" : lc);
     f.set("line_items[0][quantity]", "1");
     f.set("line_items[0][price_data][currency]", o.currency);
