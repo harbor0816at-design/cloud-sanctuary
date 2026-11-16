@@ -3,8 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Sanctuary · A church in the cloud</title>
-<meta name="description" content="An online church you can enter any time: pray quietly, light a candle, confess privately, pray together. Église en ligne · Online-Kirche · Chiesa online · Iglesia en línea.">
+<!--SEO-->
+<title>Sanctuary · An online church, open day and night</title>
+<meta name="description" content="Step into a quiet virtual church any time: pray in silence, light a candle for someone, make a private guided confession, or pray together with people around the world. Free to enter.">
+<link rel="canonical" href="https://cloudsanctuary.app/">
+<link rel="alternate" hreflang="en" href="https://cloudsanctuary.app/">
+<link rel="alternate" hreflang="fr" href="https://cloudsanctuary.app/fr/">
+<link rel="alternate" hreflang="de" href="https://cloudsanctuary.app/de/">
+<link rel="alternate" hreflang="it" href="https://cloudsanctuary.app/it/">
+<link rel="alternate" hreflang="es" href="https://cloudsanctuary.app/es/">
+<link rel="alternate" hreflang="zh-CN" href="https://cloudsanctuary.app/zh/">
+<link rel="alternate" hreflang="x-default" href="https://cloudsanctuary.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sanctuary">
+<meta property="og:url" content="https://cloudsanctuary.app/">
+<meta property="og:title" content="Sanctuary — a church that is always open">
+<meta property="og:description" content="Pray quietly, light a candle for someone, or pray together with others. Free to enter, day or night.">
+<meta property="og:image" content="https://cloudsanctuary.app/og/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sanctuary — a church that is always open">
+<meta name="twitter:description" content="Pray quietly, light a candle for someone, or pray together with others. Free to enter, day or night.">
+<meta name="twitter:image" content="https://cloudsanctuary.app/og/og-en.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://cloudsanctuary.app/#site", "url": "https://cloudsanctuary.app/", "name": "Sanctuary", "inLanguage": "en", "description": "Step into a quiet virtual church any time: pray in silence, light a candle for someone, make a private guided confession, or pray together with people around the world. Free to enter.", "publisher": {"@id": "https://cloudsanctuary.app/#org"}}, {"@type": "Organization", "@id": "https://cloudsanctuary.app/#org", "name": "Fidova Technology", "url": "https://cloudsanctuary.app/", "email": "fidovatech@gmail.com", "logo": "https://cloudsanctuary.app/icon-512.png"}, {"@type": "WebApplication", "name": "Sanctuary", "url": "https://cloudsanctuary.app/", "applicationCategory": "LifestyleApplication", "operatingSystem": "Any (web browser)", "inLanguage": "en", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@id": "https://cloudsanctuary.app/#org"}}]}</script>
+<!--/SEO-->
 <meta name="theme-color" content="#0c0907">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon-192.png">
@@ -13,10 +37,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sanctuary">
-<meta property="og:title" content="Sanctuary · A church in the cloud">
-<meta property="og:description" content="An online church you can enter any time — pray, light a candle, pray together. Join me.">
-<meta property="og:image" content="/icon-512.png">
-<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -207,9 +227,9 @@ body.touch.in #actions{left:130px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="/i18n/en.js?v=4"></script>
-<script>(function(){var L=['en','fr','de','it','es','zh'],l=null;try{var q=new URLSearchParams(location.search).get('lang');if(q&&L.indexOf(q)>=0){l=q;localStorage.setItem('sanct_lang',JSON.stringify(q));}else{var s=JSON.parse(localStorage.getItem('sanct_lang')||'null');if(L.indexOf(s)>=0)l=s;}}catch(e){}
+<script>(function(){var L=['en','fr','de','it','es','zh'],l=null,pm=location.pathname.match(/^\/(fr|de|it|es|zh)\//);try{if(pm){l=pm[1];localStorage.setItem('sanct_lang',JSON.stringify(l));}var q=new URLSearchParams(location.search).get('lang');if(l){}else if(q&&L.indexOf(q)>=0){l=q;localStorage.setItem('sanct_lang',JSON.stringify(q));}else{var s=JSON.parse(localStorage.getItem('sanct_lang')||'null');if(L.indexOf(s)>=0)l=s;}}catch(e){}
 if(!l){var n=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);for(var i=0;i<n.length&&!l;i++){var c=String(n[i]||'').slice(0,2).toLowerCase();if(c==='en'||c==='fr'||c==='de'||c==='it'||c==='es')l=c;}}
 l=l||'en';window.SANCT_LANG=l;document.documentElement.lang=l==='zh'?'zh-CN':l;if(l!=='en')document.write('<script src="/i18n/'+l+'.js?v=4"><\/script>');})();</script>
-<script src="/app.js?v=4"></script>
+<script src="/app.js?v=5"></script>
 </body>
 </html>

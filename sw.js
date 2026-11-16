@@ -1,5 +1,5 @@
-const V='sanctuary-v4';
-const SHELL=['/','/index.html','/privacy.html','/manifest.webmanifest','/icon-192.png','/icon.svg','/app.js?v=4','/i18n/en.js?v=4','/i18n/fr.js?v=4','/i18n/de.js?v=4','/i18n/it.js?v=4','/i18n/es.js?v=4','/i18n/zh.js?v=4'];
+const V='sanctuary-v5';
+const SHELL=['/','/index.html','/privacy.html','/manifest.webmanifest','/icon-192.png','/icon.svg','/app.js?v=5','/fr/','/de/','/it/','/es/','/zh/','/i18n/en.js?v=4','/i18n/fr.js?v=4','/i18n/de.js?v=4','/i18n/it.js?v=4','/i18n/es.js?v=4','/i18n/zh.js?v=4'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);

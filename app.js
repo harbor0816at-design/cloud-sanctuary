@@ -11,7 +11,7 @@ const DICT=window.I18N[LANG],SCR=window.SCRIPTURE[LANG]||window.SCRIPTURE.en;
 function t(k,v){let s=DICT[k];if(s==null)s=window.I18N.en[k];if(s==null)return k;if(v)for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s;}
 const LOCALE={en:'en-US',fr:'fr-FR',de:'de-DE',it:'it-IT',es:'es-ES',zh:'zh-CN'}[LANG];
 document.documentElement.lang=LANG==='zh'?'zh-CN':LANG;
-document.title=t('docTitle');
+if(LANG!=='en'&&!location.pathname.startsWith('/'+LANG+'/'))document.title=t('docTitle'); // language pages carry their own SEO title
 document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
 let CUR=store.get('cur',null);
 if(CUR!=='eur'&&CUR!=='usd'){let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}CUR=/^Europe\//.test(tz)?'eur':'usd';}
@@ -490,7 +490,8 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&modalEl)closeModal();});
 
 /* ---------- sharing & referral ---------- */
 function track(kind,channel,target){if(!sb)return;rpc('sanct_track',{p_kind:kind,p_ref:kind==='visit'?REF:(me&&me.ref_code)||null,p_channel:channel||null,p_target:target||null}).catch(()=>{});}
-function shareUrl(params){const q=new URLSearchParams(params||{});if(me&&me.ref_code)q.set('ref',me.ref_code);const s=q.toString();return location.origin+'/'+(s?'?'+s:'');}
+const SITE=/^(localhost|127\.)/.test(location.hostname)?location.origin:'https://cloudsanctuary.app';
+function shareUrl(params){const q=new URLSearchParams(params||{});if(me&&me.ref_code)q.set('ref',me.ref_code);const s=q.toString();return SITE+'/'+(LANG==='en'?'':LANG+'/')+(s?'?'+s:'');}
 function share(o){const url=shareUrl(o.params),text=o.text||t('shSite'),kind=o.kind||'site';
  const open=()=>{const enc=encodeURIComponent,full=text+' '+url;
   const ch=[['WhatsApp','https://wa.me/?text='+enc(full)],['Telegram','https://t.me/share/url?url='+enc(url)+'&text='+enc(text)],['X','https://twitter.com/intent/tweet?text='+enc(text)+'&url='+enc(url)],['Facebook','https://www.facebook.com/sharer/sharer.php?u='+enc(url)],[t('shEmail'),'mailto:?subject='+enc(t('shSubject'))+'&body='+enc(full)]];
@@ -702,7 +703,7 @@ function goDo(kind){
  if(kind==='verse')return tele(3.2,-5.6,0,()=>openVerse());}
 document.querySelectorAll('#dock [data-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();goDo(b.dataset.go);});
 function langRow(){return`<div class="row langs" style="justify-content:flex-start">${LANGS.map(l=>`<button class="btn ${l===LANG?'pri':''}" data-lang="${l}">${({en:'English',fr:'Français',de:'Deutsch',it:'Italiano',es:'Español',zh:'中文'})[l]}</button>`).join('')}</div>`;}
-function bindLang(root){root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{if(b.dataset.lang===LANG)return;store.set('lang',b.dataset.lang);location.reload();});}
+function bindLang(root){root.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{const l=b.dataset.lang;if(l===LANG)return;store.set('lang',l);location.href='/'+(l==='en'?'':l+'/')+location.search;});}
 function openMenu(){openSheet(t('menuT'),`<div class="sec" style="margin-top:4px;border:none;padding-top:0">${t('goT')}</div><div class="tele">${PLACES.map((p,i)=>`<button class="btn" data-i="${i}">${t(p[0])}<small>${t(p[0]+'S')}</small></button>`).join('')}</div>
  <div class="row" style="justify-content:flex-start"><button class="btn pri" id="minv">🎁 ${t('mInvite')}</button><button class="btn" id="mverse">📖 ${t('verseT')}</button><button class="btn" id="mmusic">♪ ${t('mMusic')} · ${audioOn?t('mOn'):t('mOff')}</button></div>
  <div class="sec">🌐 ${t('langT')}</div>${langRow()}

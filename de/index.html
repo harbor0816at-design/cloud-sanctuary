@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<!--SEO-->
+<title>Sanctuary · Eine Online-Kirche, Tag und Nacht geöffnet</title>
+<meta name="description" content="Betreten Sie jederzeit eine stille virtuelle Kirche: beten Sie in der Stille, zünden Sie eine Kerze für jemanden an, beichten Sie privat oder beten Sie gemeinsam mit Menschen weltweit. Eintritt frei.">
+<link rel="canonical" href="https://cloudsanctuary.app/de/">
+<link rel="alternate" hreflang="en" href="https://cloudsanctuary.app/">
+<link rel="alternate" hreflang="fr" href="https://cloudsanctuary.app/fr/">
+<link rel="alternate" hreflang="de" href="https://cloudsanctuary.app/de/">
+<link rel="alternate" hreflang="it" href="https://cloudsanctuary.app/it/">
+<link rel="alternate" hreflang="es" href="https://cloudsanctuary.app/es/">
+<link rel="alternate" hreflang="zh-CN" href="https://cloudsanctuary.app/zh/">
+<link rel="alternate" hreflang="x-default" href="https://cloudsanctuary.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sanctuary">
+<meta property="og:url" content="https://cloudsanctuary.app/de/">
+<meta property="og:title" content="Sanctuary – eine Kirche, die immer offen ist">
+<meta property="og:description" content="Still beten, eine Kerze für jemanden anzünden oder gemeinsam beten. Eintritt frei, Tag und Nacht.">
+<meta property="og:image" content="https://cloudsanctuary.app/og/og-de.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sanctuary – eine Kirche, die immer offen ist">
+<meta name="twitter:description" content="Still beten, eine Kerze für jemanden anzünden oder gemeinsam beten. Eintritt frei, Tag und Nacht.">
+<meta name="twitter:image" content="https://cloudsanctuary.app/og/og-de.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://cloudsanctuary.app/#site", "url": "https://cloudsanctuary.app/de/", "name": "Sanctuary", "inLanguage": "de", "description": "Betreten Sie jederzeit eine stille virtuelle Kirche: beten Sie in der Stille, zünden Sie eine Kerze für jemanden an, beichten Sie privat oder beten Sie gemeinsam mit Menschen weltweit. Eintritt frei.", "publisher": {"@id": "https://cloudsanctuary.app/#org"}}, {"@type": "Organization", "@id": "https://cloudsanctuary.app/#org", "name": "Fidova Technology", "url": "https://cloudsanctuary.app/", "email": "fidovatech@gmail.com", "logo": "https://cloudsanctuary.app/icon-512.png"}, {"@type": "WebApplication", "name": "Sanctuary", "url": "https://cloudsanctuary.app/de/", "applicationCategory": "LifestyleApplication", "operatingSystem": "Any (web browser)", "inLanguage": "de", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@id": "https://cloudsanctuary.app/#org"}}]}</script>
+<!--/SEO-->
+<meta name="theme-color" content="#0c0907">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sanctuary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d9b26a;--gold2:#f0d49a;--ink:#f4ead8;--dim:#bfae93;--panel:rgba(22,16,11,.86);--line:rgba(217,178,106,.28)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b0806;color:var(--ink);font-family:"Noto Serif SC","Songti SC","STSong",serif;touch-action:none;user-select:none;-webkit-user-select:none}
+#stage{position:fixed;inset:0}
+#stage canvas{display:block;width:100%;height:100%}
+button{font-family:inherit;color:inherit;cursor:pointer}
+input,textarea{font-family:inherit;user-select:text;-webkit-user-select:text}
+.hud{position:fixed;z-index:5;pointer-events:none}
+.hud>*{pointer-events:auto}
+#topbar{top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+#zone{pointer-events:none;background:rgba(15,10,7,.55);border:1px solid var(--line);padding:7px 14px;border-radius:999px;font-size:14px;letter-spacing:.12em;color:var(--gold2);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#tl{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.pill{pointer-events:auto;background:rgba(15,10,7,.55);border:1px solid var(--line);padding:5px 12px;border-radius:999px;font-size:12px;color:var(--dim);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none}
+.pill.show{display:inline-block}
+#online i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#8fd18b;margin-right:6px;box-shadow:0 0 8px #8fd18b}
+#group{cursor:pointer}
+#group.live{color:#1b120a;background:linear-gradient(180deg,#f0d49a,#c99a4c);border-color:#f0d49a;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(240,212,154,.5)}50%{box-shadow:0 0 0 8px rgba(240,212,154,0)}}
+#intro .links{margin-top:14px;font-size:12px}
+#intro .links a{color:#a8916d;text-decoration:none;border-bottom:1px dotted #6f5f48;margin:0 6px}
+#tr{display:flex;gap:8px;align-items:flex-start;pointer-events:auto}
+.icon{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(15,10,7,.6);font-size:17px;display:grid;place-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#mapbtn{padding:4px;border-radius:12px;border:1px solid var(--line);background:rgba(15,10,7,.6);width:auto;height:auto}
+#minimap{display:block;width:72px;height:104px}
+#actions{left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);display:flex;justify-content:center;gap:10px;pointer-events:none}
+#actions button{pointer-events:auto;border:1px solid rgba(240,212,154,.6);background:linear-gradient(180deg,rgba(70,48,24,.92),rgba(36,24,13,.92));padding:13px 22px;border-radius:999px;font-size:16px;letter-spacing:.08em;color:var(--gold2);box-shadow:0 6px 30px rgba(0,0,0,.45),0 0 24px rgba(217,178,106,.18);animation:rise .35s ease}
+#actions button.sec{background:rgba(15,10,7,.7);border-color:var(--line);color:var(--ink)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#hint{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 86px);font-size:13px;color:var(--dim);background:rgba(10,7,5,.5);padding:6px 14px;border-radius:999px;transition:opacity 1s;white-space:nowrap;pointer-events:none}
+#joy{left:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);width:116px;height:116px;border-radius:50%;border:1px solid var(--line);background:radial-gradient(circle,rgba(217,178,106,.08),rgba(15,10,7,.35));display:none;touch-action:none}
+#knob{position:absolute;left:38px;top:38px;width:40px;height:40px;border-radius:50%;background:rgba(240,212,154,.35);border:1px solid rgba(240,212,154,.7)}
+body.touch #joy{display:block}
+body.touch #actions{left:140px;right:12px;justify-content:flex-end;flex-wrap:wrap}
+/* sheet */
+#sheet{position:fixed;z-index:20;left:50%;bottom:0;transform:translate(-50%,105%);width:min(560px,100%);max-height:78vh;background:var(--panel);border:1px solid var(--line);border-bottom:none;border-radius:22px 22px 0 0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .38s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:0 -10px 50px rgba(0,0,0,.5)}
+#sheet.open{transform:translate(-50%,0)}
+#sheet .grab{width:42px;height:4px;border-radius:2px;background:rgba(240,212,154,.35);margin:10px auto 0}
+#sheet .head{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 6px}
+#sheet h2{margin:0;font-size:19px;font-weight:600;letter-spacing:.1em;color:var(--gold2)}
+#sheet .x{background:none;border:none;font-size:20px;color:var(--dim);padding:6px}
+#sheet .body{padding:4px 20px calc(env(safe-area-inset-bottom,0px) + 22px);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.verse{font-size:18px;line-height:1.9;color:var(--ink);margin:10px 0 4px;text-align:center;padding:0 6px}
+.ref{text-align:center;color:var(--gold);font-size:13px;letter-spacing:.15em;margin-bottom:14px}
+.p{color:var(--dim);font-size:14px;line-height:1.85}
+.note{font-size:12px;color:#9c8b72;line-height:1.7;border-top:1px dashed var(--line);margin-top:16px;padding-top:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.btn{border:1px solid var(--line);background:rgba(255,240,210,.05);padding:10px 16px;border-radius:12px;font-size:15px}
+.btn.pri{border-color:rgba(240,212,154,.7);background:linear-gradient(180deg,#5a3d1d,#2e1f10);color:var(--gold2)}
+.btn:active{transform:scale(.97)}
+.tabs{display:flex;gap:6px;margin:6px 0 10px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:none;padding:9px 10px;font-size:15px;color:var(--dim);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--gold2);border-bottom-color:var(--gold)}
+.field{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:12px;font-size:15px;outline:none}
+textarea.field{min-height:120px;resize:vertical;line-height:1.7}
+.breath{width:150px;height:150px;margin:16px auto 8px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,150,.55),rgba(217,178,106,.12) 60%,transparent 72%);display:grid;place-items:center;transition:transform .2s linear}
+.breath span{font-size:15px;color:var(--gold2);letter-spacing:.3em}
+.clock{text-align:center;font-size:26px;letter-spacing:.12em;color:var(--ink)}
+.steps{display:flex;gap:6px;justify-content:center;margin:4px 0 12px}
+.steps i{width:24px;height:3px;border-radius:2px;background:rgba(240,212,154,.2)}
+.steps i.on{background:var(--gold)}
+.card{background:rgba(255,244,222,.06);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0}
+.card .t{font-size:15px;line-height:1.75}
+.card .m{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:#9c8b72}
+.card .m button{font-size:13px;padding:6px 12px}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#9c8b72;margin-left:6px}
+ul.q{padding-left:20px;color:var(--ink);line-height:2;font-size:15px}
+.burn{animation:burn 2.4s ease-in forwards;color:#ffb36b;white-space:pre-wrap;line-height:1.7;padding:12px}
+@keyframes burn{0%{opacity:1;filter:none}40%{color:#ff7a2e;text-shadow:0 0 12px #ff8a3d}100%{opacity:0;transform:translateY(-40px) scale(.96);filter:blur(6px)}}
+.tele{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.tele button{text-align:left;padding:12px}
+.tele small{display:block;color:#9c8b72;font-size:12px;margin-top:2px}
+/* intro */
+#intro{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 40%,rgba(40,26,14,.55),rgba(8,6,4,.92) 70%);transition:opacity 1.2s}
+#intro.hide{opacity:0;pointer-events:none}
+#intro .in{text-align:center;padding:24px;max-width:440px}
+#intro .cross{width:28px;height:44px;margin:0 auto 18px;position:relative;opacity:.9}
+#intro .cross:before,#intro .cross:after{content:"";position:absolute;background:var(--gold);border-radius:1px}
+#intro .cross:before{left:12px;top:0;width:4px;height:44px}
+#intro .cross:after{left:0;top:11px;width:28px;height:4px}
+#intro h1{font-weight:600;font-size:34px;letter-spacing:.3em;margin:0 0 6px;color:var(--gold2);padding-left:.3em}
+#intro .en{letter-spacing:.5em;font-size:12px;color:var(--dim);margin-bottom:22px}
+#intro .p{margin-bottom:24px}
+#intro .row .btn{padding:13px 24px;font-size:16px}
+#intro .ctl{margin-top:20px;font-size:12px;color:#8f7f68;line-height:1.9}
+#loading{font-size:13px;color:var(--dim);margin-top:10px;min-height:20px}
+#toast{position:fixed;z-index:25;left:50%;top:calc(env(safe-area-inset-top,0px) + 66px);transform:translateX(-50%);background:rgba(20,14,9,.85);border:1px solid var(--line);padding:9px 18px;border-radius:999px;font-size:14px;color:var(--gold2);opacity:0;transition:opacity .5s;pointer-events:none;white-space:nowrap}
+
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 10px;margin:3px;font-size:13px;color:var(--ink);background:rgba(255,240,210,.05)}
+.chip.dim{color:#9c8b72}
+.people{text-align:center;margin-top:6px}
+.stats{margin:6px 0 10px}
+.lbl{display:block;font-size:12px;color:#9c8b72;margin:12px 0 6px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--dim);margin:12px 0}
+.chk input{width:18px;height:18px;accent-color:#d9b26a}
+.meter{height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#d9b26a,#ffcf8a);transition:width .08s}
+.pens{display:grid;grid-template-columns:1fr;gap:8px;margin:8px 0}
+.pens .btn{text-align:left}
+.cfh{text-align:center;color:var(--gold2);font-size:17px;letter-spacing:.2em;margin:2px 0 8px}
+.sec{color:var(--gold);font-size:13px;letter-spacing:.12em;margin:18px 0 6px;border-top:1px dashed var(--line);padding-top:12px}
+.btn:disabled{opacity:.45}
+#acctbtn.in{background:linear-gradient(180deg,#5a3d1d,#2e1f10);color:var(--gold2);font-weight:600}
+#langbtn{font-size:13px}
+
+#dock{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:none;gap:4px;padding:6px;border-radius:20px;background:rgba(15,10,7,.72);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+body.in #dock{display:flex}
+body.sheet #dock{display:none}
+#dock button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:58px;padding:6px 6px;border-radius:14px;color:var(--ink)}
+#dock button:active{background:rgba(217,178,106,.18)}
+#dock b{font-size:20px;line-height:1;font-weight:400}
+#dock span{font-size:12px;color:var(--dim);letter-spacing:.04em}
+body.in #actions{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
+body.in #hint{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
+body.touch #joy{bottom:calc(env(safe-area-inset-bottom,0px) + 92px);width:104px;height:104px}
+body.touch #knob{left:32px;top:32px}
+body.touch.in #actions{left:130px}
+#intro .in{max-width:520px}
+#intro .lead{margin-bottom:16px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 14px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:16px;border:1px solid var(--line);background:rgba(30,21,13,.7);text-align:center}
+.tile:active{transform:scale(.97)}
+.tile:hover{border-color:rgba(240,212,154,.6)}
+.tile b{font-size:26px;font-weight:400;line-height:1.1}
+.tile strong{font-size:15px;color:var(--gold2);font-weight:600;letter-spacing:.04em}
+.tile small{font-size:11px;color:#a8977c;line-height:1.4}
+.tile em{font-style:normal;color:var(--gold)}
+@media (max-width:480px){.tiles{grid-template-columns:repeat(2,1fr)}#intro h1{font-size:28px}#intro .en{margin-bottom:12px}#intro .cross{margin-bottom:10px}}
+.land{margin:6px auto 12px;max-width:520px;padding:12px 14px;border-radius:14px;border:1px solid rgba(232,200,140,.45);background:rgba(60,42,22,.55);color:#f3e3c4;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.land[hidden]{display:none}
+#introLang .langs{justify-content:center!important;gap:6px;margin-top:10px}#intro #introLang .row .btn{padding:4px 10px;font-size:12px;border-radius:999px;opacity:.85}#introLang .row{margin:8px 0 0}
+.modal{position:fixed;inset:0;z-index:40;background:rgba(5,3,2,.62);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.mbox{width:100%;max-width:560px;max-height:88vh;overflow:auto;background:#1a130d;border:1px solid rgba(232,200,140,.28);border-radius:18px 18px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));color:#efe2c8;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+@media(min-width:700px){.modal{align-items:center}.mbox{border-radius:18px}}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:16px}.mx{background:none;border:0;color:#cdb98f;font-size:18px;cursor:pointer;padding:4px 8px}
+.reasons .btn{font-size:12px;padding:6px 10px}.share .btn{text-decoration:none}
+.chip.rep{cursor:pointer}.chip.rep i{font-style:normal;opacity:.55;font-size:11px}
+.card.focus{border-color:rgba(232,200,140,.8);box-shadow:0 0 0 1px rgba(232,200,140,.4)}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+
+<div class="hud" id="topbar">
+  <div id="tl"><div id="zone"></div><div class="pill" id="online"><i></i><span></span></div><div class="pill" id="group"></div></div>
+  <div id="tr">
+    <button class="icon" id="acctbtn" title="Account">👤</button>
+    <button class="icon" id="menubtn" title="Menu">☰</button>
+  </div>
+</div>
+<div class="hud" id="actions"></div>
+<div class="hud" id="hint"></div>
+<div class="hud" id="joy"><div id="knob"></div></div>
+<nav class="hud" id="dock">
+  <button data-go="pray"><b>🙏</b><span data-i18n="dPray">祷告</span></button>
+  <button data-go="candle"><b>🕯</b><span data-i18n="dCandle">点蜡烛</span></button>
+  <button data-go="confess"><b>✝</b><span data-i18n="dConfess">忏悔</span></button>
+  <button data-go="group"><b>👥</b><span data-i18n="dGroup">祷告会</span></button>
+  <button data-go="wall"><b>📜</b><span data-i18n="dWall">代祷墙</span></button>
+</nav>
+<div id="toast"></div>
+
+<div id="sheet"><div class="grab"></div><div class="head"><h2 id="sheetTitle"></h2><button class="x" id="sheetX">✕</button></div><div class="body" id="sheetBody"></div></div>
+
+<div id="intro">
+  <div class="in">
+    <div class="cross"></div>
+    <h1 data-i18n="title">云上圣所</h1>
+    <div class="en" data-i18n="sub">SANCTUARY</div>
+    <div id="land" class="land" hidden></div>
+    <div class="p lead" data-i18n="introShort"></div>
+    <div class="tiles">
+      <button class="tile" data-go="pray"><b>🙏</b><strong data-i18n="tlPray"></strong><small data-i18n="tlPrayS"></small></button>
+      <button class="tile" data-go="candle"><b>🕯</b><strong data-i18n="tlCandle"></strong><small><em id="tCandleP"></em> · <span data-i18n="tlCandleS"></span></small></button>
+      <button class="tile" data-go="confess"><b>✝</b><strong data-i18n="tlConfess"></strong><small><em id="tConfessP"></em> · <span data-i18n="tlConfessS"></span></small></button>
+      <button class="tile" data-go="group"><b>👥</b><strong data-i18n="tlGroup"></strong><small data-i18n="tlGroupS"></small></button>
+      <button class="tile" data-go="wall"><b>📜</b><strong data-i18n="tlWall"></strong><small data-i18n="tlWallS"></small></button>
+      <button class="tile" data-go="explore"><b>⛪</b><strong data-i18n="tlExplore"></strong><small data-i18n="tlExploreS"></small></button>
+    </div>
+    <div id="loading" data-i18n="preparing">Preparing…</div>
+    <div id="introLang"></div>
+    <div class="links"><a href="/privacy.html" data-i18n="privacy">Privacy</a><a href="#" id="installLink" style="display:none" data-i18n="install">Install</a></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/i18n/en.js?v=4"></script>
+<script>(function(){var L=['en','fr','de','it','es','zh'],l=null,pm=location.pathname.match(/^\/(fr|de|it|es|zh)\//);try{if(pm){l=pm[1];localStorage.setItem('sanct_lang',JSON.stringify(l));}var q=new URLSearchParams(location.search).get('lang');if(l){}else if(q&&L.indexOf(q)>=0){l=q;localStorage.setItem('sanct_lang',JSON.stringify(q));}else{var s=JSON.parse(localStorage.getItem('sanct_lang')||'null');if(L.indexOf(s)>=0)l=s;}}catch(e){}
+if(!l){var n=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);for(var i=0;i<n.length&&!l;i++){var c=String(n[i]||'').slice(0,2).toLowerCase();if(c==='en'||c==='fr'||c==='de'||c==='it'||c==='es')l=c;}}
+l=l||'en';window.SANCT_LANG=l;document.documentElement.lang=l==='zh'?'zh-CN':l;if(l!=='en')document.write('<script src="/i18n/'+l+'.js?v=4"><\/script>');})();</script>
+<script src="/app.js?v=5"></script>
+</body>
+</html>
