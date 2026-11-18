@@ -251,6 +251,7 @@ def candle(l):
     t = C[l]
     body = f"""<h1>{E(t['c_h1'])}</h1>
 <p class="lead">{E(t['c_lead'])}</p>
+<img src="/pins/candle-{l}.jpg" width="1000" height="1500" alt="{E(t['c_h1'])}" data-pin-description="{E(t['c_desc'])}" style="width:100%;max-width:360px;height:auto;display:block;margin:10px auto;border-radius:14px" loading="lazy">
 <a class="cta" href="{app(l, 'candle', 'candle')}">🕯 {E(t['c_cta'])}</a>
 <h2>{E(t['c_for'])}</h2><ul>{''.join(f'<li>{E(x)}</li>' for x in t['c_list'])}</ul>
 <h2>{E(t['c_how'])}</h2><ol>{''.join(f'<li>{E(x)}</li>' for x in t['c_steps'])}</ol>
@@ -267,6 +268,7 @@ def advent(l):
     weeks = "".join(f'<div class="card wk"><div class="d">{E(d)}</div><h3>{E(h)}</h3><p class="pr">{E(p)}</p></div>' for d, h, p in t["a_weeks"])
     body = f"""<h1>{E(t['a_h1'])}</h1>
 <p class="lead">{E(t['a_lead'])}</p>
+<img src="/pins/advent1-{l}.jpg" width="1000" height="1500" alt="{E(t['a_weeks'][0][1])}" data-pin-description="{E(t['a_desc'])}" style="width:100%;max-width:360px;height:auto;display:block;margin:10px auto;border-radius:14px" loading="lazy">
 <a class="cta" href="{app(l, 'candle', 'advent2026')}">🕯 {E(t['a_cta'])}</a>
 <h2>{E(t['a_dates'])}</h2>{weeks}
 <p>{E(t['a_eve'])}</p>
