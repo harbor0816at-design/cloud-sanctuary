@@ -48,7 +48,10 @@ const dayIdx=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e
 let verseIdx=dayIdx%VERSES.length;
 
 /* ---------- renderer / scene ---------- */
-const renderer=new THREE.WebGLRenderer({antialias:devicePixelRatio<1.5&&!isTouch,powerPreference:'high-performance'});
+let renderer;
+try{renderer=new THREE.WebGLRenderer({antialias:devicePixelRatio<1.5&&!isTouch,powerPreference:'high-performance'});}
+catch(e1){try{renderer=new THREE.WebGLRenderer({antialias:false});}catch(e2){renderer=null;}}
+if(!renderer){OT('webgl_fail',{ua:navigator.userAgent.slice(0,120)});$('#loading').textContent=t('noWebGL'); return;}
 const MAX_PR=Math.min(devicePixelRatio,isTouch?1:1.25);let PR=MAX_PR;
 renderer.setPixelRatio(PR);
 renderer.setSize(innerWidth,innerHeight);

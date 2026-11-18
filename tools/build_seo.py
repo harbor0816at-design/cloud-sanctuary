@@ -14,7 +14,7 @@ HTML_LANG = {"en": "en", "fr": "fr", "de": "de", "it": "it", "es": "es", "zh": "
 LOCALE = {"en": "en_US", "fr": "fr_FR", "de": "de_DE", "it": "it_IT", "es": "es_ES", "zh": "zh_CN"}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TODAY = datetime.date.today().isoformat()
-OPS = ("<script src=\"/ops-track.js?v=1\"></script>\n<script>try{OpsTrack.init({product:'sanct',"
+OPS = ("<script src=\"/ops-track.js?v=2\"></script>\n<script>try{OpsTrack.init({product:'sanct',"
        "supabaseUrl:'https://smwqqiebkdaheikihbrg.supabase.co',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtd3FxaWVia2RhaGVpa2loYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NzU2NzksImV4cCI6MjEwNzU1MTY3OX0."
        "ouoYJ_OTLp4aazXn7H9xcwGJQOQ-pF1fttwR7U5WaG4'});}catch(e){}</script>")

@@ -224,14 +224,14 @@ body.touch.in #actions{left:130px}
   </div>
 </div>
 
-<script src="/ops-track.js?v=1"></script>
+<script src="/ops-track.js?v=2"></script>
 <script>OpsTrack.init({product:'sanct',supabaseUrl:'https://smwqqiebkdaheikihbrg.supabase.co',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtd3FxaWVia2RhaGVpa2loYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NzU2NzksImV4cCI6MjEwNzU1MTY3OX0.ouoYJ_OTLp4aazXn7H9xcwGJQOQ-pF1fttwR7U5WaG4',getToken:function(){try{return JSON.parse(localStorage.getItem('sanct_tok'));}catch(e){return null;}}});</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="/i18n/en.js?v=4"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="/i18n/en.js?v=5"></script>
 <script>(function(){var L=['en','fr','de','it','es','zh'],l=null,pm=location.pathname.match(/^\/(fr|de|it|es|zh)\//);try{if(pm){l=pm[1];localStorage.setItem('sanct_lang',JSON.stringify(l));}var q=new URLSearchParams(location.search).get('lang');if(l){}else if(q&&L.indexOf(q)>=0){l=q;localStorage.setItem('sanct_lang',JSON.stringify(q));}else{var s=JSON.parse(localStorage.getItem('sanct_lang')||'null');if(L.indexOf(s)>=0)l=s;}}catch(e){}
 if(!l){var n=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']);for(var i=0;i<n.length&&!l;i++){var c=String(n[i]||'').slice(0,2).toLowerCase();if(c==='en'||c==='fr'||c==='de'||c==='it'||c==='es')l=c;}}
-l=l||'en';window.SANCT_LANG=l;document.documentElement.lang=l==='zh'?'zh-CN':l;if(l!=='en')document.write('<script src="/i18n/'+l+'.js?v=4"><\/script>');})();</script>
-<script src="/app.js?v=5"></script>
+l=l||'en';window.SANCT_LANG=l;document.documentElement.lang=l==='zh'?'zh-CN':l;if(l!=='en')document.write('<script src="/i18n/'+l+'.js?v=5"><\/script>');})();</script>
+<script src="/app.js?v=6"></script>
 </body>
 </html>

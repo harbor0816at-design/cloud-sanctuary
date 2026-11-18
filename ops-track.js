@@ -97,7 +97,12 @@
       if (errs >= 5 || !msg) return; errs++;
       track('js_error', { msg: String(msg).slice(0, 200), at: String(where || '').slice(0, 120) });
     }
-    w.addEventListener('error', function (e) { err(e.message, (e.filename || '').split('/').pop() + ':' + (e.lineno || '')); });
+    w.addEventListener('error', function (e) {
+      // 被浏览器屏蔽细节的跨域报错（多为浏览器插件或注入脚本）无法定位，不计入
+      if (!e.filename && /^Script error\.?$/.test(String(e.message || ''))) return;
+      if (e.filename && !/^https?:/.test(e.filename)) return; // chrome-extension:// 等插件报错
+      err(e.message, (e.filename || '').split('/').pop() + ':' + (e.lineno || ''));
+    });
     w.addEventListener('unhandledrejection', function (e) { var r = e.reason; err('rejection: ' + (r && r.message ? r.message : r), ''); });
     // 带 data-track 属性的元素被点击时自动上报，例如 <button data-track="pricing_view" data-track-plan="monthly">
     document.addEventListener('click', function (e) {

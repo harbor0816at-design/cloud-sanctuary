@@ -8,7 +8,7 @@ window.I18N.fr={
  dPray:"Prier",dCandle:"Cierge",dConfess:"Confesser",dGroup:"Ensemble",dWall:"Intentions",
  menuT:"Menu",mSettings:"Réglages",mMusic:"Musique",mOn:"oui",mOff:"non",
  intro:"Une église en ligne, ouverte à tout moment.<br>Priez en silence, allumez un cierge pour quelqu’un, confessez-vous en privé ou priez avec beaucoup d’autres.<br>Vous verrez la présence discrète d’autres visiteurs — sans avoir à parler.",
- enter:"Entrer",quick:"Prier maintenant",preparing:"Préparation du sanctuaire…",connecting:"Connexion…",engineFail:"Le moteur 3D n’a pas pu se charger. Vérifiez votre connexion et actualisez la page.",
+ enter:"Entrer",quick:"Prier maintenant",preparing:"Préparation du sanctuaire…",connecting:"Connexion…",noWebGL:"Votre appareil ou navigateur ne prend pas en charge la 3D (WebGL). Essayez un Chrome ou Safari à jour, ou activez l’accélération matérielle.",engineFail:"Le moteur 3D n’a pas pu se charger. Vérifiez votre connexion et actualisez la page.",
  ctlTouch:"Joystick pour marcher · glissez pour regarder · des boutons apparaissent près des lieux lumineux",ctlDesk:"ZQSD / WASD ou flèches pour marcher · glissez pour regarder · appuyez sur E près des lieux lumineux",
  hintTouch:"Joystick pour marcher · glissez pour regarder · les boutons du bas vous y emmènent",hintDesk:"WASD pour marcher · glissez pour regarder · les boutons du bas vous y emmènent",
  privacy:"Confidentialité et conditions",install:"Ajouter à l’écran d’accueil",iosInstall:"Dans Safari, touchez Partager → Sur l’écran d’accueil",

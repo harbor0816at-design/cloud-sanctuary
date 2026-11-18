@@ -8,7 +8,7 @@ window.I18N.de={
  dPray:"Beten",dCandle:"Kerze",dConfess:"Beichte",dGroup:"Gemeinsam",dWall:"Anliegen",
  menuT:"Menü",mSettings:"Einstellungen",mMusic:"Musik",mOn:"an",mOff:"aus",
  intro:"Eine Online-Kirche, jederzeit offen.<br>Beten Sie in der Stille, zünden Sie eine Kerze für jemanden an, bekennen Sie privat im Beichtstuhl oder beten Sie gemeinsam mit vielen anderen.<br>Sie sehen die stille Gegenwart anderer Besucher – reden ist nicht nötig.",
- enter:"Eintreten",quick:"Jetzt beten",preparing:"Die Kirche wird vorbereitet…",connecting:"Verbindung wird hergestellt…",engineFail:"Die 3D-Engine konnte nicht geladen werden. Bitte prüfen Sie Ihre Verbindung und laden Sie die Seite neu.",
+ enter:"Eintreten",quick:"Jetzt beten",preparing:"Die Kirche wird vorbereitet…",connecting:"Verbindung wird hergestellt…",noWebGL:"Ihr Gerät oder Browser unterstützt keine 3D-Grafik (WebGL). Bitte einen aktuellen Chrome oder Safari nutzen oder die Hardwarebeschleunigung einschalten.",engineFail:"Die 3D-Engine konnte nicht geladen werden. Bitte prüfen Sie Ihre Verbindung und laden Sie die Seite neu.",
  ctlTouch:"Joystick zum Gehen · Wischen zum Umsehen · an leuchtenden Orten erscheinen Schaltflächen",ctlDesk:"WASD / Pfeiltasten zum Gehen · Ziehen zum Umsehen · an leuchtenden Orten E drücken",
  hintTouch:"Joystick zum Gehen · Wischen zum Umsehen · die Schaltflächen unten bringen Sie hin",hintDesk:"WASD zum Gehen · Ziehen zum Umsehen · die Schaltflächen unten bringen Sie hin",
  privacy:"Datenschutz & Nutzungsbedingungen",install:"Zum Startbildschirm hinzufügen",iosInstall:"In Safari auf Teilen tippen → Zum Home-Bildschirm",

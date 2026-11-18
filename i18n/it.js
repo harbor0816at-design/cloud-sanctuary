@@ -8,7 +8,7 @@ window.I18N.it={
  dPray:"Prega",dCandle:"Candela",dConfess:"Confessa",dGroup:"Insieme",dWall:"Intenzioni",
  menuT:"Menu",mSettings:"Impostazioni",mMusic:"Musica",mOn:"sì",mOff:"no",
  intro:"Una chiesa online, aperta in ogni momento.<br>Prega in silenzio, accendi una candela per qualcuno, confessati in privato nel confessionale o prega insieme a molti altri.<br>Vedrai la presenza silenziosa di altri visitatori — non serve parlare.",
- enter:"Entra",quick:"Prega ora",preparing:"Preparazione del santuario…",connecting:"Connessione…",engineFail:"Impossibile caricare il motore 3D. Controlla la connessione e ricarica la pagina.",
+ enter:"Entra",quick:"Prega ora",preparing:"Preparazione del santuario…",connecting:"Connessione…",noWebGL:"Il tuo dispositivo o browser non supporta la grafica 3D (WebGL). Prova un Chrome o Safari aggiornato, oppure attiva l’accelerazione hardware.",engineFail:"Impossibile caricare il motore 3D. Controlla la connessione e ricarica la pagina.",
  ctlTouch:"Joystick per camminare · trascina per guardarti intorno · vicino ai luoghi luminosi compaiono dei pulsanti",ctlDesk:"WASD / frecce per camminare · trascina per guardare · premi E vicino ai luoghi luminosi",
  hintTouch:"Joystick per camminare · trascina per guardare · i pulsanti in basso ti portano lì",hintDesk:"WASD per camminare · trascina per guardare · i pulsanti in basso ti portano lì",
  privacy:"Privacy e condizioni",install:"Aggiungi alla schermata Home",iosInstall:"In Safari tocca Condividi → Aggiungi alla schermata Home",

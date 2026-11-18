@@ -8,7 +8,7 @@ window.I18N.es={
  dPray:"Orar",dCandle:"Vela",dConfess:"Confesar",dGroup:"Juntos",dWall:"Peticiones",
  menuT:"Menú",mSettings:"Ajustes",mMusic:"Música",mOn:"sí",mOff:"no",
  intro:"Una iglesia en línea, abierta en todo momento.<br>Ora en silencio, enciende una vela por alguien, confiésate en privado en el confesionario u ora junto a muchos otros.<br>Verás la presencia silenciosa de otros visitantes — no hace falta hablar.",
- enter:"Entrar",quick:"Orar ahora",preparing:"Preparando el santuario…",connecting:"Conectando…",engineFail:"No se pudo cargar el motor 3D. Comprueba tu conexión y recarga la página.",
+ enter:"Entrar",quick:"Orar ahora",preparing:"Preparando el santuario…",connecting:"Conectando…",noWebGL:"Tu dispositivo o navegador no admite gráficos 3D (WebGL). Prueba con Chrome o Safari actualizados, o activa la aceleración por hardware.",engineFail:"No se pudo cargar el motor 3D. Comprueba tu conexión y recarga la página.",
  ctlTouch:"Joystick para caminar · arrastra para mirar · cerca de los lugares iluminados aparecen botones",ctlDesk:"WASD / flechas para caminar · arrastra para mirar · pulsa E cerca de los lugares iluminados",
  hintTouch:"Joystick para caminar · arrastra para mirar · los botones de abajo te llevan allí",hintDesk:"WASD para caminar · arrastra para mirar · los botones de abajo te llevan allí",
  privacy:"Privacidad y condiciones",install:"Añadir a la pantalla de inicio",iosInstall:"En Safari, toca Compartir → Añadir a pantalla de inicio",
