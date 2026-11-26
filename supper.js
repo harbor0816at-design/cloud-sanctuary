@@ -32,15 +32,14 @@
     thomas: { en: 'Thomas', zh: '多马' },
     philip: { en: 'Philip', zh: '腓力' },
     andrew: { en: 'Andrew', zh: '安德烈' },
+    bartholomew: { en: 'Bartholomew', zh: '巴多罗买' },
+    jamesLess: { en: 'James the Less', zh: '小雅各' },
+    jamesGreater: { en: 'James the Greater', zh: '大雅各' },
+    matthew: { en: 'Matthew', zh: '马太' },
+    thaddeus: { en: 'Thaddeus', zh: '达太' },
+    simon: { en: 'Simon the Zealot', zh: '奋锐党西门' },
     all: { en: 'The disciples', zh: '众门徒' }
   };
-
-  // 座位：耶稣居中，门徒分列两侧。每个座位对应 id。
-  var SEATS = [
-    [190, 'andrew', false], [255, 'judas', false], [320, 'thomas', false],
-    [400, 'lord', true],
-    [480, 'peter', false], [545, 'john', false], [610, 'philip', false]
-  ];
 
   // 福音书中的台词，按出处顺序。who 为 all 表示众门徒同说。
   var LINES = [
@@ -145,38 +144,78 @@
     document.head.appendChild(s);
   }
 
-  function figure(x, id, lord) {
-    var s = lord ? 1.25 : 0.9;
-    var robes = { lord: '#f1ead8', judas: '#4a3a4a', peter: '#7a2e2e', john: '#2e4a6b',
-                  thomas: '#5b4a2a', philip: '#3e5a3a', andrew: '#6b3f5e' };
-    var robe = robes[id] || '#4a4a6b';
-    var y = lord ? 100 : 120;
-    var h = 110 * s;
-    var d = 'M' + (x - 22 * s) + ' ' + (y + h) +
-      ' Q' + (x - 24 * s) + ' ' + (y + 40 * s) + ' ' + (x - 12 * s) + ' ' + (y + 22 * s) +
-      ' L' + (x + 12 * s) + ' ' + (y + 22 * s) +
-      ' Q' + (x + 24 * s) + ' ' + (y + 40 * s) + ' ' + (x + 22 * s) + ' ' + (y + h) + ' Z';
-    var halo = lord
-      ? '<circle cx="' + x + '" cy="' + (y - 2 * s) + '" r="' + (19 * s) + '" fill="none" stroke="#e8c26a" stroke-width="2" opacity=".9"/>'
+  var ROBE = {
+    lord: '#b5383c', judas: '#5c4a3a', peter: '#4d6a8f', john: '#7d9a6b', thomas: '#6b7fa0',
+    philip: '#c0a06a', andrew: '#8a5a46', bartholomew: '#6b5a86', jamesLess: '#9c6e4c',
+    jamesGreater: '#7f5a3c', matthew: '#5a7a68', thaddeus: '#a07a52', simon: '#7a6a4a'
+  };
+  var MANTLE = { lord: '#3f5a8a', thomas: '#c79a4f', peter: '#c7a24d', john: '#c9b48a', philip: '#5a7a68' };
+
+  function figure(x, y, id, lord) {
+    var s = lord ? 1.2 : 0.9;
+    var robe = ROBE[id] || '#6b5a4a';
+    var body = 'M' + (x - 24 * s) + ' 250 Q' + (x - 26 * s) + ' ' + (y + 60 * s) + ' ' + (x - 12 * s) + ' ' + (y + 26 * s) +
+      ' L' + (x + 12 * s) + ' ' + (y + 26 * s) + ' Q' + (x + 26 * s) + ' ' + (y + 60 * s) + ' ' + (x + 24 * s) + ' 250 Z';
+    var mantle = MANTLE[id]
+      ? '<path d="M' + (x - 22 * s) + ' 250 Q' + (x - 14 * s) + ' ' + (y + 50 * s) + ' ' + (x - 4 * s) + ' ' + (y + 24 * s) +
+        ' L' + (x + 4 * s) + ' ' + (y + 24 * s) + ' Q' + (x + 14 * s) + ' ' + (y + 50 * s) + ' ' + (x + 22 * s) + ' 250 Z" fill="' + MANTLE[id] + '" opacity=".9"/>'
       : '';
+    var hair = '<ellipse cx="' + x + '" cy="' + (y - 3 * s) + '" rx="' + (10 * s) + '" ry="' + (7 * s) + '" fill="#4a3424"/>';
+    var head = '<circle cx="' + x + '" cy="' + y + '" r="' + (8.5 * s) + '" fill="#d9b48c"/>';
+    var halo = lord ? '<circle cx="' + x + '" cy="' + (y - 2) + '" r="' + (20 * s) + '" fill="none" stroke="#e8c26a" stroke-width="2.2"/>' : '';
     return '<g class="sf" data-f="' + id + '" role="button" tabindex="0" aria-label="' + NAME[id][LANG] + '">' +
-      '<path d="' + d + '" fill="' + robe + '"/>' +
-      '<circle cx="' + x + '" cy="' + y + '" r="' + (10 * s) + '" fill="#e9c9a0"/>' + halo + '</g>';
+      '<path d="' + body + '" fill="' + robe + '"/>' + mantle + hair + head + halo + '</g>';
   }
 
+  // 构图参照：一点透视、三扇窗、长桌、十三人分四组，耶稣居中。
   function sceneSVG() {
-    var g = '';
-    SEATS.forEach(function (p) { g += figure(p[0], p[1], p[2]); });
-    return '<svg viewBox="0 0 800 380" role="img" aria-label="' + (LANG === 'zh' ? '最后的晚餐场景' : 'Scene of the Last Supper') + '">' +
-      '<defs><radialGradient id="sg" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".55"/>' +
-      '<stop offset="1" stop-color="#ffcf8a" stop-opacity="0"/></radialGradient></defs>' +
-      '<rect width="800" height="380" fill="#1a120c"/>' +
-      '<path d="M300 0 L500 0 L500 60 Q400 20 300 60 Z" fill="#2c1f14"/>' +
-      '<ellipse cx="400" cy="120" rx="330" ry="180" fill="url(#sg)"/>' +
-      g +
-      '<rect x="110" y="230" width="580" height="22" rx="4" fill="#5a3a22"/>' +
-      '<rect x="100" y="250" width="600" height="110" fill="#2a1a0e"/>' +
-      '<path d="M120 252 L680 252 L680 270 L120 270 Z" fill="#8c2f2f" opacity=".85"/>' +
+    var seats = [
+      [88, 'bartholomew', 140], [150, 'jamesLess', 132], [208, 'andrew', 140],
+      [252, 'judas', 150], [300, 'peter', 136], [348, 'john', 146],
+      [400, 'lord', 118, true],
+      [452, 'thomas', 142], [500, 'jamesGreater', 132], [548, 'philip', 140],
+      [605, 'matthew', 140], [660, 'thaddeus', 132], [715, 'simon', 140]
+    ];
+    var figs = '';
+    seats.forEach(function (p) { figs += figure(p[0], p[2], p[1], !!p[3]); });
+
+    var coffers = '';
+    [0, 1, 2, 3, 4].forEach(function (i) {
+      var x = i * 200;
+      coffers += '<line x1="' + x + '" y1="0" x2="400" y2="118" stroke="#8a7050" stroke-width="1" opacity=".45"/>';
+    });
+    [28, 56, 84].forEach(function (y) {
+      coffers += '<line x1="0" y1="' + y + '" x2="800" y2="' + y + '" stroke="#8a7050" stroke-width=".8" opacity=".3"/>';
+    });
+
+    var windows = '';
+    [[210, 92], [372, 110], [520, 92]].forEach(function (w) {
+      var x = w[0], hw = w[1] === 110 ? 58 : 46;
+      windows += '<path d="M' + (x - hw) + ' 150 L' + (x - hw) + ' 70 Q' + x + ' 30 ' + (x + hw) + ' 70 L' + (x + hw) + ' 150 Z" fill="url(#skyg)" stroke="#5e4a30" stroke-width="3"/>' +
+        '<line x1="' + x + '" y1="40" x2="' + x + '" y2="150" stroke="#5e4a30" stroke-width="2"/>';
+    });
+
+    return '<svg viewBox="0 0 800 380" role="img" aria-label="' + (LANG === 'zh' ? '最后的晚餐场景（模拟还原）' : 'Scene of the Last Supper (simulated)') + '">' +
+      '<defs>' +
+      '<linearGradient id="wallg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c4a77a"/><stop offset="1" stop-color="#6b5638"/></linearGradient>' +
+      '<linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d6d8"/><stop offset="1" stop-color="#8fa6ad"/></linearGradient>' +
+      '<radialGradient id="glow" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".55"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></radialGradient>' +
+      '<filter id="tex"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix type="saturate" values="0"/></filter>' +
+      '<filter id="mott"><feTurbulence type="fractalNoise" baseFrequency=".012" numOctaves="3" seed="3"/><feColorMatrix type="matrix" values="0 0 0 0 .35  0 0 0 0 .26  0 0 0 0 .14  0 0 0 .9 -.35"/></filter>' +
+      '</defs>' +
+      '<rect width="800" height="380" fill="url(#wallg)"/>' +
+      '<rect x="0" y="0" width="800" height="120" fill="#2e2014" opacity=".55"/>' +
+      coffers +
+      windows +
+      '<rect x="0" y="0" width="800" height="380" fill="url(#glow)"/>' +
+      figs +
+      '<path d="M40 232 L760 232 L800 300 L0 300 Z" fill="#6a5a44"/>' +
+      '<path d="M50 228 L750 228 L770 252 L30 252 Z" fill="#f1e6cc"/>' +
+      '<path d="M30 252 L770 252 L790 300 L10 300 Z" fill="#e4d6b4"/>' +
+      '<ellipse cx="200" cy="244" rx="14" ry="5" fill="#d9cdb0"/><ellipse cx="300" cy="246" rx="14" ry="5" fill="#d9cdb0"/>' +
+      '<ellipse cx="500" cy="246" rx="14" ry="5" fill="#d9cdb0"/><ellipse cx="600" cy="244" rx="14" ry="5" fill="#d9cdb0"/>' +
+      '<rect width="800" height="380" filter="url(#mott)" opacity=".22" style="mix-blend-mode:multiply"/>' +
+      '<rect width="800" height="380" filter="url(#tex)" opacity=".06"/>' +
       '</svg>';
   }
 
